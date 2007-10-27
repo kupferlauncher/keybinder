@@ -54,6 +54,8 @@ _wrap_tomboy_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs)
 	PyObject *extra_args;
 	GSList *iter;
 	Handler_and_Args *ha;
+	gboolean success;
+	PyObject *ret;
 	
 	len = PyTuple_Size(args);
 	if (len < 2) {
@@ -93,11 +95,12 @@ _wrap_tomboy_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs)
 	Py_XINCREF(handler);
 	Py_XINCREF(extra_args);
 	
-	tomboy_keybinder_bind(keystring, &handler_c_func, ha);
+	success = tomboy_keybinder_bind(keystring, &handler_c_func, ha);
 	HA_List = g_slist_prepend(HA_List, ha);
-
-	Py_INCREF(Py_None);
-	return Py_None;
+	
+	ret = success ? Py_True : Py_False;
+	Py_INCREF(ret);
+	return ret;
 }
 %%
 override tomboy_keybinder_unbind kwargs 
