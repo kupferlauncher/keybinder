@@ -21,7 +21,7 @@
 #include "eggaccelerators.h"
 
 #include <string.h>
-#include <gdk/gdkx.h>
+#include <X11/Xlib.h>
 #include <gdk/gdkkeysyms.h>
 
 enum
