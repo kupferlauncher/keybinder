@@ -1,4 +1,4 @@
-AC_INIT(keybinder-module, 2.27.4,
+AC_INIT(keybinder, 0.0.1,
     [])
 AC_CONFIG_SRCDIR(keybinder/__init__.py)
 AC_CONFIG_MACRO_DIR([m4])
