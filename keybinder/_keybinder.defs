@@ -5,7 +5,7 @@
 
 ;; From tomboykeybinder.h
 
-(define-function tomboy_keybinder_bind
+(define-function bind
   (c-name "tomboy_keybinder_bind")
   (return-type "gboolean")
   (parameters
@@ -15,7 +15,7 @@
   )
 )
 
-(define-function tomboy_keybinder_unbind
+(define-function unbind
   (c-name "tomboy_keybinder_unbind")
   (return-type "none")
   (parameters
@@ -24,7 +24,7 @@
   )
 )
 
-(define-function tomboy_keybinder_is_modifier
+(define-function is_modifier
   (c-name "tomboy_keybinder_is_modifier")
   (return-type "gboolean")
   (parameters
@@ -32,7 +32,7 @@
   )
 )
 
-(define-function tomboy_keybinder_get_current_event_time
+(define-function get_current_event_time
   (c-name "tomboy_keybinder_get_current_event_time")
   (return-type "guint32")
 )
