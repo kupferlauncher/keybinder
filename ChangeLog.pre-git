@@ -1,0 +1,229 @@
+2009-04-13  Sebastian Pölsterl  <sebp@cvs.gnome.org>
+
+	* deskbar/handlers/evolution/Makefile.am
+	* deskbar/handlers/gdmclient/Makefile.am
+	* deskbar/osutils/Makefile.am
+	* deskbar/core/_userdirs/Makefile.am
+	* deskbar/core/keybinder/Makefile.am
+	* deskbar/ui/iconentry/Makefile.am:
+	Fixed bug #578803: deskbar-applet incorrectly installs
+	to pythondir rather than pyexecdir
+
+2009-01-15  Sebastian Pölsterl  <sebp@cvs.gnome.org>
+
+    * deskbar/core/keybinder/eggaccelerators.c:
+    Fixed bug #567422: Add missing include to eggaccelerators.c
+    (patch by Magnus Boman)
+    
+2009-01-05  Sebastian Pölsterl  <sebp@cvs.gnome.org>
+
+    * configure.ac:
+    Post release version bump to 2.25.5
+
+2008-11-04  Sebastian Pölsterl  <sebp@cvs.gnome.org>
+
+    * deskbar/core/keybinder/eggaccelerators.h
+    * deskbar/core/keybinder/tomboykeybinder.c
+    * deskbar/core/keybinder/eggaccelerators.c
+    * deskbar/core/keybinder/tomboykeybinder.h
+    * deskbar/ui/iconentry/ephy-icon-entry.h
+    * deskbar/ui/iconentry/ephy-icon-entry.c:
+    Cleanup GTK+ includes
+
+2007-10-27	Sebastian Pölsterl  <sebp@cvs.gnome.org>
+
+	* deskbar/core/keybinder/_keybinder.override:
+	* deskbar/core/Keybinder.py:
+	Fixed: Doesn't unbind keybinding when it changes.
+	Python binding of tomboy_keybinder_bind returns boolean value now
+
+2006-11-21  Rodrigo Moya <rodrigo@novell.com>
+
+	* deskbar/keybinder/tomboykeybinder.c: added missing header files
+	to pass code check tests.
+
+2006-01-21  Raphael Slinckx  <rslinckx@cvs.gnome.org>
+
+	* deskbar/DeskbarApplet.py:
+	* deskbar/Keybinder.py:
+	Repair the keybinder
+
+2006-01-21  Raphael Slinckx  <rslinckx@cvs.gnome.org>
+
+	* TODO:
+	* configure.ac:
+	* deskbar/BrowserMatch.py:
+	* deskbar/DeskbarApplet.py:
+	* deskbar/DeskbarAppletPreferences.py:
+	* deskbar/DeskbarHistory.py:
+	* deskbar/Handler.py:
+	* deskbar/Indexer.py:
+	* deskbar/Keybinder.py:
+	* deskbar/Makefile.am:
+	* deskbar/Match.py:
+	* deskbar/ModuleContext.py:
+	* deskbar/ModuleList.py:
+	* deskbar/ModuleLoader.py:
+	* deskbar/Utils.py:
+	* deskbar/Watcher.py:
+	* deskbar/__init__.py:
+	* deskbar/about.py:
+	* deskbar/applet.py:
+	* deskbar/applet_keybinder.py:
+	* deskbar/defs.py:
+	* deskbar/deskbar-applet.py:
+	* deskbar/deskbarentry.py:
+	* deskbar/filewatcher.py:
+	* deskbar/handler.py:
+	* deskbar/handler_utils.py:
+	* deskbar/handlers/beagle-live.py:
+	* deskbar/handlers/beagle.py:
+	* deskbar/handlers/debug-async_handler.py:
+	* deskbar/handlers/debug-requirements.py:
+	* deskbar/handlers/debug-signal_handler.py:
+	* deskbar/handlers/email_address.py:
+	* deskbar/handlers/epiphany.py:
+	* deskbar/handlers/evolution.py:
+	* deskbar/handlers/files.py:
+	* deskbar/handlers/galago.py:
+	* deskbar/handlers/galeon.py:
+	* deskbar/handlers/google-live.py:
+	* deskbar/handlers/gtkbookmarks.py:
+	* deskbar/handlers/mozilla.py:
+	* deskbar/handlers/pathprograms.py:
+	* deskbar/handlers/programs.py:
+	* deskbar/handlers/volumes.py:
+	* deskbar/handlers/web_address.py:
+	* deskbar/handlers_browsers.py:
+	* deskbar/history.py:
+	* deskbar/indexer.py:
+	* deskbar/locale_utils.py:
+	* deskbar/module_list.py:
+	* deskbar/preferences.py:
+	* deskbar/ui/.cvsignore:
+	* deskbar/ui/About.py:
+	* deskbar/ui/DeskbarEntry.py:
+	* deskbar/ui/DeskbarPreferencesUI.py:
+	* deskbar/ui/Makefile.am:
+	* deskbar/ui/ModuleListView.py:
+	Big refactoring for inclusion of the cuemiac branch
+
+2005-11-25  Nigel Tao  <nigeltao@cvs.gnome.org>
+
+	* data/prefs-dialog.glade:
+	* deskbar/applet.py:
+	* deskbar/applet_keybinder.py:
+	* deskbar/module_list.py:
+	* deskbar/preferences.py:
+	Tidied up the preferences dialog.  Added keybinding UI.  Rephrased
+	some things to be consistent with the Epiphany web browser. For example,
+	"Handlers" became "Extensions".  Fixed warning when no extension is
+	selected.  "Enabled" checkbox now comes before the extension icon.
+	Removed the word "Applet".
+
+2005-10-18  Raphael Slinckx  <rslinckx@cvs.gnome.org>
+
+	* deskbar/keybinder/_keybinder.override:
+	Remove a bit of the GIL sprinkling, still seems to work.
+
+2005-10-18  Raphael Slinckx  <rslinckx@cvs.gnome.org>
+
+	* deskbar/deskbar-applet:
+	* deskbar/keybinder/_keybinder.override:
+	Mess around with The Big Sucking Python Lock, hopefully fixes all the
+	problems in the world, universe, and everything
+
+2005-10-11  Raphael Slinckx  <rslinckx@cvs.gnome.org>
+
+	* AUTHORS:
+	* deskbar/about.py:
+	Add Mikkel
+	* deskbar/applet_keybinder.py:
+	* deskbar/deskbarentry.py:
+	* deskbar/handler.py:
+	* deskbar/handlers/galago.py:
+	* deskbar/handlers/mozilla.py:
+	* deskbar/handlers/programs.py:
+	* deskbar/indexer.py:
+	* deskbar/locale_utils.py:
+	Fix problems found with pylint, add icon_size instead of -1 for more
+	py-2.3 fixes, and fix an error in locale detection.
+
+2005-10-07  Raphael Slinckx  <rslinckx@cvs.gnome.org>
+
+	* deskbar/__init__.py:
+	Revert to 16 pixels icon size, some problems with non-even values seems to
+	appear
+	
+	* deskbar/applet.py:
+	Fixes the Gnome-WARNING due to gnome.ui being loaded after gnomeapplet
+	
+	* deskbar/applet_keybinder.py:
+	Use a default global keybinding for uninstalled setup
+	
+	* deskbar/deskbarentry.py:
+	Force the image widget to be the icon size, to avoid flickering of entry
+	length
+
+	* deskbar/handlers/Makefile.am:
+	Add networkplaces.py handler
+	
+	* deskbar/indexer.py:
+	bug #318241, partial word matches not cleared
+
+2005-10-07  Nigel Tao  <nigeltao@cvs.gnome.org>
+
+	* deskbar/applet_keybinder.py:
+	* deskbar/keybinder/_keybinder.override:
+	unbind(keystring) now only takes 1 argument.
+	(Python) exceptions in the callback will now be printed to stderr.
+	Binding collisions now throw exceptions.  Removing non-existant bindings
+	also throw exceptions.
+	Plugged some memory leaks.  I reverted (removed) the "g_free(keystring)"
+	calls added in Raphael's commits, since I don't think we own the
+	reference to the char *.  See:
+	1) http://www.python.org/doc/2.4.2/ext/parseTuple.html
+	and
+	2) function pygobject_connect in pygobject.c in the pygtk source for
+	example code.
+
+2005-10-07  Nigel Tao  <nigeltao@cvs.gnome.org>
+
+	* deskbar/applet_keybinder.py:
+	Fixed crasher when gconf entry for "/apps/deskbar/keybinder" is None.
+
+2005-10-06  Raphael Slinckx  <raphael@slinckx.net>
+
+	* data/deskbar-applet.schemas.in:
+	Add a new pref, the global shortcut key
+	* deskbar/Makefile.am:
+	* deskbar/__init__.py:
+	* deskbar/applet.py:
+	* deskbar/deskbar-applet:
+	Add a way to focus the applet with a global key shortcut.
+	The gconf default is <Alt>F3
+	
+	* deskbar/handler_utils.py:
+	Fix a little bug when the term is exactly matching a file
+	
+	* deskbar/keybinder/_keybinder.override:
+	* deskbar/keybinder/_keybindermodule.c: (init_keybinder):
+	Add unbind, and fix some leaks in the python wrapper
+
+2005-10-07  Nigel Tao  <nigeltao@cvs.gnome.org>
+
+	* configure.ac:
+	* deskbar/Makefile.am:
+	* deskbar/keybinder/.cvsignore:
+	* deskbar/keybinder/Makefile.am:
+	* deskbar/keybinder/__init__.py:
+	* deskbar/keybinder/_keybinder.defs:
+	* deskbar/keybinder/_keybinder.override:
+	* deskbar/keybinder/_keybindermodule.c:
+	* deskbar/keybinder/eggaccelerators.c:
+	* deskbar/keybinder/eggaccelerators.h:
+	* deskbar/keybinder/gen-defs.sh:
+	* deskbar/keybinder/tomboykeybinder.c:
+	* deskbar/keybinder/tomboykeybinder.h:
+	First draft of Tomboy's keybinding code (and Python wrapper).
+	Removed portstem.py from deskbar/Makefile.am.
