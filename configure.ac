@@ -26,12 +26,6 @@ dnl ****************************************************************************
 GNOME_DOC_INIT
 
 dnl ****************************************************************************
-dnl * GConf support
-dnl ****************************************************************************
-AC_PATH_PROG(GCONFTOOL, gconftool-2)
-AM_GCONF_SOURCE_2
-
-dnl ****************************************************************************
 dnl * Python 2.5
 dnl ****************************************************************************
 AM_PATH_PYTHON(2.5)
@@ -83,8 +77,6 @@ dnl ******************
 dnl * Python modules
 dnl ******************
 AM_CHECK_PYMOD(glib)
-AM_CHECK_PYMOD(gnomedesktop)
-AM_CHECK_PYMOD(gnomekeyring)
 AM_CHECK_PYMOD(gobject)
 AM_CHECK_PYMOD(gtk)
 AM_CHECK_PYMOD(gtk.gdk)
@@ -104,24 +96,6 @@ AC_SUBST(PYGTK_DEFSDIR)
 AC_MSG_RESULT($PYGTK_DEFSDIR)
 
 dnl ****************************************************************************
-dnl * Check for prctl()
-dnl ****************************************************************************
-AC_CHECK_FUNC(prctl, HAVE_PRCTL="yes", HAVE_PRCTL="yes")
-if test "x$HAVE_PRCTL" = "xyes"; then
-	AC_CHECK_DECL(PR_SET_NAME, STILL_HAVE_PRCTL="yes", STILL_HAVE_PRCTL="no", [#include <sys/prctl.h>])
-	if test "x$STILL_HAVE_PRCTL" = "xyes"; then
-		AC_DEFINE(HAVE_PRCTL, 1, [Defined as 1 if prctl and PR_SET_NAME are available])
-	fi
-fi
-
-dnl ****************************************************************************
-dnl * Check for DBUS Services directory
-dnl ****************************************************************************
-DBUS_SERVICES_DIR="$DATADIR/dbus-1/services"
-AC_SUBST(DBUS_SERVICES_DIR)
-AC_DEFINE_UNQUOTED(DBUS_SERVICES_DIR, "$DBUS_SERVICES_DIR", [DBus services directory])
-
-dnl ****************************************************************************
 dnl * --------------------------------------------------------------------------
 dnl ****************************************************************************
 AC_OUTPUT([
@@ -134,7 +108,6 @@ echo $PACKAGE v$VERSION
 echo
 
 echo Prefix............... : $prefix
-echo Dbus Services Dir.... : $DBUS_SERVICES_DIR
 
 echo "Now type make to compile"
 echo "Then su to root and type: make install"
