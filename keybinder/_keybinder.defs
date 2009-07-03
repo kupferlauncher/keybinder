@@ -13,7 +13,7 @@
     '("TomboyBindkeyHandler" "handler")
     '("gpointer" "user_data")
   )
-  (docstring "bind (keystring, user_data) -> success")
+  (docstring "bind (keystring, callback, user_data) -> success")
 )
 
 (define-function unbind
