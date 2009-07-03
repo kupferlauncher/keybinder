@@ -54,7 +54,6 @@ PKG_CHECK_MODULES(DESKBAR,
 AC_SUBST(DESKBAR_CFLAGS)
 AC_SUBST(DESKBAR_LIBS)
 
-AC_MSG_CHECKING([for gnomeapplet module])
 if AC_RUN_LOG([DISPLAY= $PYTHON -c '
 import pygtk
 pygtk.require("2.0")
