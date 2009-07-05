@@ -15,8 +15,8 @@ your option, any later version).
 
 Homepage: http://kaizer.se/wiki/python-keybinder/
 """
-# version will change when it's sensible, for now just hardcode
-__version__ = "0"
+
+__version__ = "@VERSION@"
 
 # gtk has to be setup
 # this is to avoid warning spew if you plainly

@@ -1,6 +1,6 @@
 AC_INIT(keybinder, 0.0.2,
     [])
-AC_CONFIG_SRCDIR(keybinder/__init__.py)
+AC_CONFIG_SRCDIR(keybinder/_keybinder.c)
 AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE
@@ -99,6 +99,7 @@ dnl * --------------------------------------------------------------------------
 dnl ****************************************************************************
 AC_OUTPUT([
 Makefile
+keybinder/__init__.py
 keybinder/Makefile
 ])
 
