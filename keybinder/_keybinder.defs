@@ -13,7 +13,10 @@
     '("TomboyBindkeyHandler" "handler")
     '("gpointer" "user_data")
   )
-  (docstring "bind (keystring, callback, user_data) -> success")
+  (docstring "bind (keystring, callback, user_data) -> bool\n"
+	"\n"
+	"return True on success\n"
+	"will raise KeyError if keystring is already bound")
 )
 
 (define-function unbind
@@ -23,7 +26,9 @@
     '("const-char*" "keystring")
     '("TomboyBindkeyHandler" "handler")
   )
-  (docstring "unbind (keystring)")
+  (docstring "unbind (keystring)\n"
+	"\n"
+	"will raise KeyError if keystring is not bound")
 )
 
 (define-function is_modifier
