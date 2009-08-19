@@ -15,8 +15,8 @@
   )
   (docstring "bind (keystring, callback, user_data) -> bool\n"
 	"\n"
-	"return True on success\n"
-	"will raise KeyError if keystring is already bound")
+	"Return True on success.\n"
+	"Will raise KeyError if keystring is already bound.")
 )
 
 (define-function unbind
@@ -28,7 +28,7 @@
   )
   (docstring "unbind (keystring)\n"
 	"\n"
-	"will raise KeyError if keystring is not bound")
+	"Will raise KeyError if keystring is not bound.")
 )
 
 (define-function is_modifier
@@ -43,7 +43,7 @@
 (define-function get_current_event_time
   (c-name "tomboy_keybinder_get_current_event_time")
   (return-type "guint32")
-  (docstring "get_current_event_time () -> int")
+  (docstring "get_current_event_time () -> long")
 )
 
 
