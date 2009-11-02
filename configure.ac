@@ -54,24 +54,6 @@ PKG_CHECK_MODULES(DESKBAR,
 AC_SUBST(DESKBAR_CFLAGS)
 AC_SUBST(DESKBAR_LIBS)
 
-if AC_RUN_LOG([DISPLAY= $PYTHON -c '
-import pygtk
-pygtk.require("2.0")
-
-try:
-    import gnomeapplet
-except ImportError, e:
-    if str(e).find("gnomeapplet") >= 0:
-          raise
-except:
-    pass
-']); then
-  AC_MSG_RESULT([yes])
-else
-  AC_MSG_RESULT([no])
-  AC_MSG_ERROR([gnomeapplet Python module required to build deskbar])
-fi
-
 dnl ******************
 dnl * Python modules
 dnl ******************
