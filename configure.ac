@@ -13,6 +13,11 @@ AC_SUBST(ACLOCAL_AMFLAGS, "$ACLOCAL_FLAGS -I m4")
 AC_PROG_CC
 
 dnl ****************************************************************************
+dnl * Enable Automake 1.11 silent rules
+dnl ****************************************************************************
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+
+dnl ****************************************************************************
 dnl * Pkg-Config
 dnl ****************************************************************************
 AC_CHECK_PROG(HAVE_PKGCONFIG, pkg-config, yes, no)
