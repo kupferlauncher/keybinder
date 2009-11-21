@@ -1,0 +1,9 @@
+keybinder v0.0.4
+----------------
+
+Released 22 November 2009
+
+* Remove bogus dependencies from configure checks (gnome-doc-utils and
+  gnomeapplet)
+* Enable ``AM_SILENT_RULES``
+* Fix language errors in documentation
