@@ -1,3 +1,29 @@
+keybinder v0.x
+--------------
+
+Not Released Yet
+
+* Replace Egg* code with GTK+ functionality.
+
+* Take great pains to understand "Consumed Modifiers", as in:
+
+  + When pressing *Ctrl+Shift+1* to make *Ctrl+!*, Shift is a consumed
+    modifier. So when receiving a binding specification like
+    ``<Ctrl>exclam``, we have to dig deep into XKB to find out which
+    hardware modifiers are needed to create the bang (!) character.
+    With this, it is now possible to bind any composed character.
+
+
+* Keybindings now work in alternative layouts as well, you just have to
+  press the same hardware keys as in the primary layout.  For example a
+  keybinding *Ctrl+W*  will still be available on the same physical
+  keys after switching to a secondary Greek layout.
+
+* Remove keybinder.is_modifier from the module
+
+* Use -Wall
+
+
 keybinder v0.0.4
 ----------------
 
