@@ -1,4 +1,4 @@
-AC_INIT(keybinder, 0.0.4,
+AC_INIT(keybinder, 0.0.4+,
     [])
 AC_CONFIG_SRCDIR(keybinder/tomboykeybinder.c)
 AC_CONFIG_MACRO_DIR([m4])
@@ -46,15 +46,17 @@ AC_SUBST(LIBDIR)
 dnl ****************************************************************************
 dnl * PyGTK & co for Gnome Streamer
 dnl ****************************************************************************
-PKG_CHECK_MODULES(DESKBAR,
+PKG_CHECK_MODULES(KEYBINDER,
 	gtk+-2.0				>= 2.12
 	pygtk-2.0				>= 2.12
 	pygobject-2.0			>= 2.15.3
 )
-AC_SUBST(DESKBAR_CFLAGS)
-AC_SUBST(DESKBAR_LIBS)
+AC_SUBST(KEYBINDER_CFLAGS)
+AC_SUBST(KEYBINDER_LIBS)
 
-dnl Add XKB
+dnl  **********************************
+dnl  Require XKB
+dnl  **********************************
 X_LIBS="`$PKG_CONFIG --libs x11 xext xrender`"
 X_CFLAGS="`$PKG_CONFIG --cflags x11 xext xrender`"
 CFLAGS="$CFLAGS $X_CFLAGS"
