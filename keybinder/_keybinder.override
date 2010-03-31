@@ -6,7 +6,7 @@ headers
 #define NO_IMPORT_PYGOBJECT
 #include "pygobject.h"
 
-#include <tomboykeybinder.h>
+#include <bind.h>
 
 typedef struct _Handler_and_Args {
 	PyObject *handler;
@@ -40,12 +40,12 @@ modulename _keybinder
 %%
 %%
 ignore-glob
-	tomboy_keybinder_init
+	keybinder_init
 	*_get_type
 %%
-override tomboy_keybinder_bind kwargs 
+override keybinder_bind kwargs 
 static PyObject*
-_wrap_tomboy_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs) 
+_wrap_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs) 
 {
 	guint len;
 	PyObject *first;
@@ -59,18 +59,18 @@ _wrap_tomboy_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs)
 	
 	len = PyTuple_Size(args);
 	if (len < 2) {
-		PyErr_SetString(PyExc_TypeError, "tomboy_keybinder_bind requires at least 2 arguments");
+		PyErr_SetString(PyExc_TypeError, "bind requires at least 2 arguments");
 		return NULL;
 	}
 	first = PySequence_GetSlice(args, 0, 2);
-	if (!PyArg_ParseTuple(first, "sO:tomboy_keybinder_bind", &keystring, &handler)) {
+	if (!PyArg_ParseTuple(first, "sO:keybinder_bind", &keystring, &handler)) {
 		Py_XDECREF(first);
 		return NULL;
 	}
 	Py_XDECREF(first);
 
 	if (!PyCallable_Check(handler)) {
-		PyErr_SetString(PyExc_TypeError, "tomboy_keybinder_bind: 2nd argument must be callable");
+		PyErr_SetString(PyExc_TypeError, "bind: 2nd argument must be callable");
 		return NULL;
 	}
 
@@ -78,7 +78,7 @@ _wrap_tomboy_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs)
 		Handler_and_Args *ha = (Handler_and_Args *) iter->data;
 
 		if (strcmp(keystring, ha->keystring) == 0) {
-			PyErr_SetString(PyExc_KeyError, "tomboy_keybinder_bind: keystring is already bound");
+			PyErr_SetString(PyExc_KeyError, "bind: keystring is already bound");
 			return NULL;
 		}
 	}
@@ -95,7 +95,7 @@ _wrap_tomboy_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs)
 	Py_XINCREF(handler);
 	Py_XINCREF(extra_args);
 	
-	success = tomboy_keybinder_bind(keystring, &handler_c_func, ha);
+	success = keybinder_bind(keystring, &handler_c_func, ha);
 	HA_List = g_slist_prepend(HA_List, ha);
 	
 	ret = success ? Py_True : Py_False;
@@ -103,9 +103,9 @@ _wrap_tomboy_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs)
 	return ret;
 }
 %%
-override tomboy_keybinder_unbind kwargs 
+override keybinder_unbind kwargs 
 static PyObject*
-_wrap_tomboy_keybinder_unbind (PyGObject *self, PyObject *args, PyObject *kwargs) 
+_wrap_keybinder_unbind (PyGObject *self, PyObject *args, PyObject *kwargs) 
 {
 	guint len;
 	PyObject *first;
@@ -114,10 +114,10 @@ _wrap_tomboy_keybinder_unbind (PyGObject *self, PyObject *args, PyObject *kwargs
 	
 	len = PyTuple_Size(args);
 	if (len != 1) {
-		PyErr_SetString(PyExc_TypeError, "tomboy_keybinder_unbind requires exactly 1 argument");
+		PyErr_SetString(PyExc_TypeError, "unbind requires exactly 1 argument");
 		return NULL;
 	}
-	if (!PyArg_ParseTuple(args, "s:tomboy_keybinder_unbind", &keystring)) {
+	if (!PyArg_ParseTuple(args, "s:keybinder_unbind", &keystring)) {
 		return NULL;
 	}
 
@@ -125,7 +125,7 @@ _wrap_tomboy_keybinder_unbind (PyGObject *self, PyObject *args, PyObject *kwargs
 		Handler_and_Args *ha = (Handler_and_Args *) iter->data;
 
 		if (strcmp(keystring, ha->keystring) == 0) {
-			tomboy_keybinder_unbind(keystring, &handler_c_func);
+			keybinder_unbind(keystring, &handler_c_func);
 			HA_List = g_slist_remove(HA_List, ha);
 			Py_XDECREF(ha->handler);
 			Py_XDECREF(ha->args);
@@ -137,6 +137,6 @@ _wrap_tomboy_keybinder_unbind (PyGObject *self, PyObject *args, PyObject *kwargs
 		}
 	}
 
-	PyErr_SetString(PyExc_KeyError, "tomboy_keybinder_bind: keystring is not bound");
+	PyErr_SetString(PyExc_KeyError, "bind: keystring is not bound");
 	return NULL;
 }

@@ -8,8 +8,8 @@ _keybinder_la_LDFLAGS = -module -avoid-version -export-symbols-regex init_keybin
 _keybinder_la_LIBADD = $(KEYBINDER_LIBS)
 _keybinder_la_SOURCES = \
 	_keybindermodule.c \
-	tomboykeybinder.c \
-	tomboykeybinder.h
+	bind.c \
+	bind.h
 
 nodist__keybinder_la_SOURCES = _keybinder.c
 

@@ -3,14 +3,14 @@
 ;; Enumerations and flags ...
 
 
-;; From tomboykeybinder.h
+;; From bind.h
 
 (define-function bind
-  (c-name "tomboy_keybinder_bind")
+  (c-name "keybinder_bind")
   (return-type "gboolean")
   (parameters
     '("const-char*" "keystring")
-    '("TomboyBindkeyHandler" "handler")
+    '("BindkeyHandler" "handler")
     '("gpointer" "user_data")
   )
   (docstring "bind (keystring, callback, user_data) -> bool\n"
@@ -20,11 +20,11 @@
 )
 
 (define-function unbind
-  (c-name "tomboy_keybinder_unbind")
+  (c-name "keybinder_unbind")
   (return-type "none")
   (parameters
     '("const-char*" "keystring")
-    '("TomboyBindkeyHandler" "handler")
+    '("BindkeyHandler" "handler")
   )
   (docstring "unbind (keystring)\n"
 	"\n"
@@ -32,7 +32,7 @@
 )
 
 (define-function get_current_event_time
-  (c-name "tomboy_keybinder_get_current_event_time")
+  (c-name "keybinder_get_current_event_time")
   (return-type "guint32")
   (docstring "get_current_event_time () -> long")
 )

@@ -1,6 +1,6 @@
 AC_INIT(keybinder, 0.0.4+,
     [])
-AC_CONFIG_SRCDIR(keybinder/tomboykeybinder.c)
+AC_CONFIG_SRCDIR(keybinder/bind.c)
 AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE

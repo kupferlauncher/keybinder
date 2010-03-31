@@ -1,5 +1,6 @@
-/* tomboykeybinder.c
+/* bind.c
  * Copyright (C) 2008 Alex Graveley
+ * Copyright (C) 2010 Ulrik Sverdrup <ulrik.sverdrup@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -30,7 +31,7 @@
 #include <X11/Xlib.h>
 #include <X11/XKBlib.h>
 
-#include "tomboykeybinder.h"
+#include "bind.h"
 
 /* Uncomment the next line to print a debug trace. */
 /* #define DEBUG */
@@ -59,7 +60,7 @@
 
 
 typedef struct _Binding {
-	TomboyBindkeyHandler  handler;
+	BindkeyHandler  handler;
 	gpointer              user_data;
 	char                 *keystring;
 	/* GDK "distilled" values */
@@ -355,7 +356,7 @@ keymap_changed (GdkKeymap *map)
 }
 
 void 
-tomboy_keybinder_init (void)
+keybinder_init (void)
 {
 	GdkKeymap *keymap = gdk_keymap_get_default ();
 	GdkWindow *rootwin = gdk_get_default_root_window ();
@@ -371,8 +372,8 @@ tomboy_keybinder_init (void)
 }
 
 gboolean
-tomboy_keybinder_bind (const char           *keystring,
-		       TomboyBindkeyHandler  handler,
+keybinder_bind (const char           *keystring,
+		               BindkeyHandler  handler,
 		       gpointer              user_data)
 {
 	Binding *binding;
@@ -396,8 +397,8 @@ tomboy_keybinder_bind (const char           *keystring,
 }
 
 void
-tomboy_keybinder_unbind (const char           *keystring, 
-			 TomboyBindkeyHandler  handler)
+keybinder_unbind (const char           *keystring, 
+			   BindkeyHandler  handler)
 {
 	GSList *iter;
 
@@ -419,7 +420,7 @@ tomboy_keybinder_unbind (const char           *keystring,
 }
 
 guint32
-tomboy_keybinder_get_current_event_time (void)
+keybinder_get_current_event_time (void)
 {
 	if (processing_event) 
 		return last_event_time;

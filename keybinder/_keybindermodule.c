@@ -7,7 +7,7 @@
 #include <pygobject.h>
 
 /* include any extra headers needed here */
-#include <tomboykeybinder.h>
+#include <bind.h>
 
 void py_keybinder_register_classes(PyObject *d);
 extern PyMethodDef py_keybinder_functions[];
@@ -19,7 +19,7 @@ init_keybinder(void)
 
     /* perform any initialisation required by the library here */
 	init_pygobject();
-	tomboy_keybinder_init();
+	keybinder_init();
 	
     m = Py_InitModule("_keybinder", py_keybinder_functions);
     d = PyModule_GetDict(m);

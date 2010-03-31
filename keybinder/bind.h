@@ -1,4 +1,4 @@
-/* tomboykeybinder.h
+/* bind.h
  * Copyright (C) 2008 Alex Graveley
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -20,29 +20,29 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#ifndef __TOMBOY_KEY_BINDER_H__
-#define __TOMBOY_KEY_BINDER_H__
+#ifndef __KEY_BINDER_H__
+#define __KEY_BINDER_H__
 
 #include <glib.h>
 
 G_BEGIN_DECLS
 
-typedef void (* TomboyBindkeyHandler) (char *keystring, gpointer user_data);
+typedef void (* BindkeyHandler) (char *keystring, gpointer user_data);
 
-void tomboy_keybinder_init   (void);
+void keybinder_init   (void);
 
-gboolean tomboy_keybinder_bind   (const char           *keystring,
-			      TomboyBindkeyHandler  handler,
+gboolean keybinder_bind   (const char           *keystring,
+			      BindkeyHandler  handler,
 			      gpointer              user_data);
 
-void tomboy_keybinder_unbind (const char           *keystring,
-			      TomboyBindkeyHandler  handler);
+void keybinder_unbind (const char           *keystring,
+			      BindkeyHandler  handler);
 
-gboolean tomboy_keybinder_is_modifier (guint keycode);
+gboolean keybinder_is_modifier (guint keycode);
 
-guint32 tomboy_keybinder_get_current_event_time (void);
+guint32 keybinder_get_current_event_time (void);
 
 G_END_DECLS
 
-#endif /* __TOMBOY_KEY_BINDER_H__ */
+#endif /* __KEY_BINDER_H__ */
 
