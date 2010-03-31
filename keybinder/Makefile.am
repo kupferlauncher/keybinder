@@ -1,13 +1,13 @@
 INCLUDES = $(PYTHON_INCLUDES) $(DESKBAR_CFLAGS)
 
+CFLAGS+=-Wall
+
 _keybinderdir = $(pyexecdir)/keybinder
 _keybinder_LTLIBRARIES = _keybinder.la
 _keybinder_la_LDFLAGS = -module -avoid-version -export-symbols-regex init_keybinder
 _keybinder_la_LIBADD = $(DESKBAR_LIBS)
 _keybinder_la_SOURCES = \
 	_keybindermodule.c \
-	eggaccelerators.c \
-	eggaccelerators.h \
 	tomboykeybinder.c \
 	tomboykeybinder.h
 

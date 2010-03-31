@@ -54,6 +54,18 @@ PKG_CHECK_MODULES(DESKBAR,
 AC_SUBST(DESKBAR_CFLAGS)
 AC_SUBST(DESKBAR_LIBS)
 
+dnl Add XKB
+X_LIBS="`$PKG_CONFIG --libs x11 xext xrender`"
+X_CFLAGS="`$PKG_CONFIG --cflags x11 xext xrender`"
+CFLAGS="$CFLAGS $X_CFLAGS"
+LIBS="$X_LIBS $LIBS"
+
+AC_CHECK_FUNC(XkbQueryExtension,
+	      0, AC_MSG_ERROR(Could not find XKB))
+
+LDFLAGS="-Wl,--as-needed"
+
+
 dnl ******************
 dnl * Python modules
 dnl ******************

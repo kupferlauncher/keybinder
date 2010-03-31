@@ -31,15 +31,6 @@
 	"Will raise KeyError if keystring is not bound.")
 )
 
-(define-function is_modifier
-  (c-name "tomboy_keybinder_is_modifier")
-  (return-type "gboolean")
-  (parameters
-    '("guint" "keycode")
-  )
-  (docstring "is_modifier (keycode) -> bool")
-)
-
 (define-function get_current_event_time
   (c-name "tomboy_keybinder_get_current_event_time")
   (return-type "guint32")
