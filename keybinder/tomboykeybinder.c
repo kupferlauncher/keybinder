@@ -129,12 +129,13 @@ FinallyGetModifiersForKeycode(register XkbDescPtr     xkb,
 }
 
 
-static int
+static gboolean
 grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
 				      uint       keyval,
 				      uint       modifiers,
 				      gboolean   grab)
 {
+	/* Ignornable modifiers */
 	guint mod_masks [] = {
 		0, /* modifier only */
 		GDK_MOD2_MASK,
@@ -145,8 +146,12 @@ grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
 	GdkKeymapKey *keys;
 	gint n_keys;
 	GdkModifierType add_modifiers;
-	Display *disp = GDK_WINDOW_XDISPLAY(rootwin);
-	XkbDescPtr xmap = XkbGetMap(disp, XkbAllClientInfoMask, XkbUseCoreKbd);
+	Display *disp;
+	XkbDescPtr xmap;
+	gboolean success = FALSE;
+
+	disp = GDK_WINDOW_XDISPLAY(rootwin);
+	xmap = XkbGetMap(disp, XkbAllClientInfoMask, XkbUseCoreKbd);
 
 	gdk_keymap_get_entries_for_keyval(NULL,
 					  keyval,
@@ -177,6 +182,8 @@ grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
 		TRACE (g_print("consuming modifiers %x\n",
 			add_modifiers));
 		for (i = 0; i < G_N_ELEMENTS (mod_masks); i++) {
+			gdk_error_trap_push ();
+
 			if (grab) {
 				XGrabKey (GDK_WINDOW_XDISPLAY (rootwin), 
 					  keys[k].keycode, 
@@ -191,16 +198,31 @@ grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
 					    modifiers | add_modifiers | mod_masks [i], 
 					    GDK_WINDOW_XWINDOW (rootwin));
 			}
+			gdk_flush();
+			if (gdk_error_trap_pop()) {
+				TRACE (
+				g_warning("Failed bind for %d,  i: %d\n",
+					keys[k].keycode, i)
+				);
+			} else {
+				success = TRUE;
+				TRACE (
+					g_print("Success bind  %d, i: %d\n",
+						keys[k].keycode, i)
+				);
+			}
 		}
 	}
 	g_free(keys);
+	XkbFreeClientMap(xmap, 0, TRUE);
 
-	return TRUE;
+	return success;
 }
 
 static gboolean 
 do_grab_key (Binding *binding)
 {
+	gboolean success;
 	GdkKeymap *keymap = gdk_keymap_get_default ();
 	GdkWindow *rootwin = gdk_get_default_root_window ();
 
@@ -219,20 +241,16 @@ do_grab_key (Binding *binding)
 	binding->keyval = keysym;
 	binding->modifiers = modifiers;
 
-	gdk_error_trap_push ();
+	success = grab_ungrab_with_ignorable_modifiers (rootwin,
+					keysym,
+					modifiers,
+					TRUE /* grab */);
 
-	grab_ungrab_with_ignorable_modifiers (rootwin,
-					      keysym,
-					      modifiers,
-					      TRUE /* grab */);
-	gdk_flush ();
-
-	if (gdk_error_trap_pop ()) {
+	if (!success) {
 	   g_warning ("Binding '%s' failed!\n", binding->keystring);
-	   return FALSE;
 	}
 
-	return TRUE;
+	return success;
 }
 
 static gboolean 
