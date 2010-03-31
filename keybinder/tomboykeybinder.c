@@ -33,7 +33,7 @@
 #include "tomboykeybinder.h"
 
 /* Uncomment the next line to print a debug trace. */
-#define DEBUG
+/* #define DEBUG */
 
 #ifdef DEBUG
 #  define TRACE(x) x
