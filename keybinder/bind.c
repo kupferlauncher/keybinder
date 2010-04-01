@@ -32,6 +32,7 @@
 #include <X11/XKBlib.h>
 
 #include "bind.h"
+#include "eggaccelerators.h"
 
 /* Uncomment the next line to print a debug trace. */
 /* #define DEBUG */
@@ -228,19 +229,24 @@ do_grab_key (Binding *binding)
 	GdkWindow *rootwin = gdk_get_default_root_window ();
 
 
-	GdkModifierType modifiers;
+	GdkModifierType vmodifiers, modifiers;
 	guint keysym = 0;
 
 	if (keymap == NULL || rootwin == NULL)
 		return FALSE;
 
-	gtk_accelerator_parse(binding->keystring, &keysym, &modifiers);
+	gtk_accelerator_parse(binding->keystring, &keysym, &vmodifiers);
 	if (keysym == 0)
 		return FALSE;
 
-	TRACE (g_print ("Got accel %d, %d\n", keysym, modifiers));
+	TRACE (g_print ("Got accel %d, 0x%x\n", keysym, vmodifiers));
+
 	binding->keyval = keysym;
-	binding->modifiers = modifiers;
+	binding->modifiers = vmodifiers;
+
+	egg_keymap_resolve_virtual_modifiers(keymap, 
+			vmodifiers,
+			&modifiers);
 
 	success = grab_ungrab_with_ignorable_modifiers (rootwin,
 					keysym,
@@ -276,7 +282,7 @@ filter_func (GdkXEvent *gdk_xevent, GdkEvent *event, gpointer data)
 	XEvent *xevent = (XEvent *) gdk_xevent;
 	guint event_mods;
 	GSList *iter;
-	GdkModifierType consumed;
+	GdkModifierType consumed, virtuals;
 	guint keyval;
 	GdkKeymap *keymap = gdk_keymap_get_default();
 	guint mod_mask = gtk_accelerator_get_default_mod_mask();
@@ -288,21 +294,22 @@ filter_func (GdkXEvent *gdk_xevent, GdkEvent *event, gpointer data)
 
 	switch (xevent->type) {
 	case KeyPress:
+		egg_keymap_virtualize_modifiers(keymap,
+				     xevent->xkey.state,
+				     &virtuals);
+
 		gdk_keymap_translate_keyboard_state(
 				keymap,
 				xevent->xkey.keycode,
-				xevent->xkey.state,
+				virtuals,
 				/* See top comment why we don't use this here:
 				   XkbGroupForCoreState (xevent->xkey.state)
 				 */
 				WE_ONLY_USE_ONE_GROUP,
 				&keyval, NULL, NULL, &consumed);
-		TRACE (g_print ("Got KeyPress! keycode: %d, modifiers: %d\n", 
+		TRACE (g_print ("Got KeyPress keycode: %d, modifiers: 0x%x\n", 
 				xevent->xkey.keycode, 
 				xevent->xkey.state));
-		TRACE (g_print ("Translated: keyval: %d, modifiers: %d\n", 
-				keyval, 
-				xevent->xkey.state & ~consumed));
 
 		/* 
 		 * Set the last event time for use when showing
@@ -311,7 +318,13 @@ filter_func (GdkXEvent *gdk_xevent, GdkEvent *event, gpointer data)
 		processing_event = TRUE;
 		last_event_time = xevent->xkey.time;
 
-		event_mods = xevent->xkey.state & mod_mask & ~consumed;
+
+		event_mods = virtuals & mod_mask & ~consumed;
+
+		TRACE (g_print ("Translated keyval: %d, modifiers: 0x%x\n", 
+				keyval, 
+				event_mods));
+
 
 		for (iter = bindings; iter != NULL; iter = iter->next) {
 			Binding *binding = (Binding *) iter->data;

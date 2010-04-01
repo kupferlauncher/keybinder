@@ -512,30 +512,20 @@ egg_keymap_virtualize_modifiers (GdkKeymap              *keymap,
     {
       if ((1 << i) & concrete_mods)
         {
-          EggVirtualModifierType cleaned;
-          
-          cleaned = modmap->mapping[i] & ~(EGG_VIRTUAL_MOD2_MASK |
-                                           EGG_VIRTUAL_MOD3_MASK |
-                                           EGG_VIRTUAL_MOD4_MASK |
-                                           EGG_VIRTUAL_MOD5_MASK);
-          
-          if (cleaned != 0)
-            {
-              virtual |= cleaned;
-            }
-          else
-            {
-              /* Rather than dropping mod2->mod5 if not bound,
-               * go ahead and use the concrete names
-               */
-              virtual |= modmap->mapping[i];
-            }
+          if (modmap->mapping[i] & GDK_MOD1_MASK)
+            virtual |= GDK_MOD1_MASK;
+          else if (modmap->mapping[i] & EGG_VIRTUAL_SUPER_MASK)
+            virtual |= GDK_SUPER_MASK;
+          else if (modmap->mapping[i] & EGG_VIRTUAL_HYPER_MASK)
+            virtual |= GDK_HYPER_MASK;
+          else if (modmap->mapping[i] & EGG_VIRTUAL_META_MASK)
+            virtual |= GDK_META_MASK;
         }
       
       ++i;
     }
   
-  *virtual_mods = virtual;
+  *virtual_mods = virtual | concrete_mods;
 }
 
 static void
