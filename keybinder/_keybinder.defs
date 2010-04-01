@@ -15,6 +15,9 @@
   )
   (docstring "bind (keystring, callback, user_data) -> bool\n"
 	"\n"
+	"Keystring should be in the format understood by\n"
+	"gtk.accelerator_parse. An example is '<Ctrl>space'.\n"
+	"\n"
 	"Return True on success.\n"
 	"Will raise KeyError if keystring is already bound.")
 )
