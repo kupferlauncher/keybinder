@@ -1,9 +1,9 @@
-keybinder v0.x
---------------
+keybinder v0.0.9
+----------------
 
-Not Released Yet
+Released Tuesday,  6 April 2010
 
-* Replace Egg* code with GTK+ functionality.
+* Replace some egg* code with GTK+ functionality.
 
 * Take great pains to understand "Consumed Modifiers", as in:
 
