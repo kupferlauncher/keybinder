@@ -1,4 +1,4 @@
-AC_INIT(keybinder, 0.0.4+,
+AC_INIT(keybinder, 0.0.9,
     [])
 AC_CONFIG_SRCDIR(keybinder/bind.c)
 AC_CONFIG_MACRO_DIR([m4])
@@ -62,8 +62,7 @@ X_CFLAGS="`$PKG_CONFIG --cflags x11 xext xrender`"
 CFLAGS="$CFLAGS $X_CFLAGS"
 LIBS="$X_LIBS $LIBS"
 
-AC_CHECK_FUNC(XkbQueryExtension,
-	      0, AC_MSG_ERROR(Could not find XKB))
+AC_CHECK_FUNC(XkbQueryExtension, [], AC_MSG_ERROR(Could not find XKB))
 
 LDFLAGS="-Wl,--as-needed"
 
