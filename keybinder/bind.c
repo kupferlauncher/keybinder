@@ -263,13 +263,19 @@ do_grab_key (Binding *binding)
 static gboolean 
 do_ungrab_key (Binding *binding)
 {
+	GdkKeymap *keymap = gdk_keymap_get_default ();
 	GdkWindow *rootwin = gdk_get_default_root_window ();
+	GdkModifierType modifiers;
 
 	TRACE (g_print ("Removing grab for '%s'\n", binding->keystring));
 
+	egg_keymap_resolve_virtual_modifiers(keymap, 
+			binding->modifiers,
+			&modifiers);
+
 	grab_ungrab_with_ignorable_modifiers (rootwin,
 					      binding->keyval,
-					      binding->modifiers,
+					      modifiers,
 					      FALSE /* ungrab */);
 
 	return TRUE;
