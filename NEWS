@@ -1,3 +1,13 @@
+keybinder v0.1.0
+----------------
+
+Released Tuesday,  6 April 2010
+
+* Depend on GTK+ 2.20
+
+* Remove egg* code
+
+
 keybinder v0.0.9
 ----------------
 
@@ -33,3 +43,6 @@ Released 22 November 2009
   gnomeapplet)
 * Enable ``AM_SILENT_RULES``
 * Fix language errors in documentation
+
+
+.. vim: ft=rst tw=72
