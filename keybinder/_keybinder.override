@@ -96,7 +96,9 @@ _wrap_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs)
 	Py_XINCREF(extra_args);
 	
 	success = keybinder_bind(keystring, &handler_c_func, ha);
-	HA_List = g_slist_prepend(HA_List, ha);
+	if (success) {
+		HA_List = g_slist_prepend(HA_List, ha);
+	}
 	
 	ret = success ? Py_True : Py_False;
 	Py_INCREF(ret);
