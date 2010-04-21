@@ -254,8 +254,8 @@ static gboolean
 do_grab_key (Binding *binding)
 {
 	gboolean success;
-	GdkKeymap *keymap = gdk_keymap_get_default ();
 	GdkWindow *rootwin = gdk_get_default_root_window ();
+	GdkKeymap *keymap = gdk_keymap_get_default ();
 
 
 	GdkModifierType modifiers;
@@ -422,6 +422,14 @@ keybinder_init (void)
 	gdk_window_add_filter (rootwin, 
 			       filter_func, 
 			       NULL);
+
+	/* Workaround: Make sure modmap is up to date
+	 * There is possibly a bug in GTK+ where virtual modifiers are not
+	 * mapped because the modmap is not updated. The following function
+	 * updates it.
+	 */
+	(void)gdk_keymap_have_bidi_layouts(keymap);
+
 
 	g_signal_connect (keymap, 
 			  "keys_changed",
