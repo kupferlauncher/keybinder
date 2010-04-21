@@ -273,8 +273,14 @@ do_grab_key (Binding *binding)
 	binding->keyval = keysym;
 	binding->modifiers = modifiers;
 
-        /* Map virtual modifiers to non-virtual modifiers */
-        gdk_keymap_map_virtual_modifiers(keymap, &modifiers);
+	/* Map virtual modifiers to non-virtual modifiers */
+	gdk_keymap_map_virtual_modifiers(keymap, &modifiers);
+
+	if (modifiers == binding->modifiers &&
+	    (GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK) & modifiers) {
+		g_warning ("Failed to map virtual modifiers\n");
+		return FALSE;
+	}
 
 	success = grab_ungrab_with_ignorable_modifiers (rootwin,
 					keysym,
