@@ -1,3 +1,15 @@
+
+keybinder v0.1.1
+----------------
+
+Released Wednesday, 21 April 2010
+
+* Workaround GTK+ Bug 616401
+  https://bugzilla.gnome.org/show_bug.cgi?id=616401
+
+* Don't bind anything when mapping virtual modifiers fail
+  (Kupfer bug :lp:`566945`)
+
 keybinder v0.1.0
 ----------------
 
