@@ -110,7 +110,6 @@ static PyObject*
 _wrap_keybinder_unbind (PyGObject *self, PyObject *args, PyObject *kwargs) 
 {
 	guint len;
-	PyObject *first;
 	char *keystring = NULL;
 	GSList *iter;
 	
