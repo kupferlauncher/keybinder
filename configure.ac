@@ -59,13 +59,18 @@ dnl  Require XKB
 dnl  **********************************
 X_LIBS="`$PKG_CONFIG --libs x11 xext xrender`"
 X_CFLAGS="`$PKG_CONFIG --cflags x11 xext xrender`"
+old_cflags="$CFLAGS"
 CFLAGS="$CFLAGS $X_CFLAGS"
 LIBS="$X_LIBS $LIBS"
 
 AC_CHECK_FUNC(XkbQueryExtension, [], AC_MSG_ERROR(Could not find XKB))
 
-LDFLAGS="-Wl,--as-needed"
+CFLAGS="$old_cflags"
 
+X_LDFLAGS="-Wl,--as-needed $LIBS"
+
+AC_SUBST(X_CFLAGS)
+AC_SUBST(X_LDFLAGS)
 
 dnl ******************
 dnl * Python modules
@@ -74,6 +79,25 @@ AM_CHECK_PYMOD(glib)
 AM_CHECK_PYMOD(gobject)
 AM_CHECK_PYMOD(gtk)
 AM_CHECK_PYMOD(gtk.gdk)
+
+dnl Python violates C99 rules, by casting between incompatible
+dnl pointer types. GCC may generate bad code as a result of that,
+dnl so use -fno-strict-aliasing if supported.
+AC_MSG_CHECKING(whether $CC accepts -fno-strict-aliasing)
+ac_save_cc="$CC"
+CC="$CC -fno-strict-aliasing"
+AC_CACHE_VAL(ac_cv_no_strict_aliasing_ok,
+  AC_TRY_COMPILE([],[int main() { return 0; }],
+  ac_cv_no_strict_aliasing_ok=yes,
+  ac_cv_no_strict_aliasing_ok=no))
+CC="$ac_save_cc"
+AC_MSG_RESULT($ac_cv_no_strict_aliasing_ok)
+if test $ac_cv_no_strict_aliasing_ok = yes
+then
+  PYEXTRAFLAGS="-fno-strict-aliasing"
+fi
+
+AC_SUBST(PYEXTRAFLAGS)
 
 
 dnl ****************************************************************************

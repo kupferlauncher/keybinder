@@ -4,7 +4,8 @@ AM_CFLAGS = -Wall
 
 _keybinderdir = $(pyexecdir)/keybinder
 _keybinder_LTLIBRARIES = _keybinder.la
-_keybinder_la_LDFLAGS = -module -avoid-version -export-symbols-regex init_keybinder
+_keybinder_la_CPPFLAGS = $(X_CFLAGS) $(PYEXTRAFLAGS)
+_keybinder_la_LDFLAGS = -module -avoid-version -export-symbols-regex init_keybinder $(X_LDFLAGS)
 _keybinder_la_LIBADD = $(KEYBINDER_LIBS)
 _keybinder_la_SOURCES = \
 	_keybindermodule.c \
@@ -23,6 +24,7 @@ EXTRA_DIST = \
 	gen-defs.sh
 
 _keybinder.c: _keybinder.defs _keybinder.override
+
 .defs.c:
 	(cd $(srcdir) \
 	 && $(PYGTK_CODEGEN) \

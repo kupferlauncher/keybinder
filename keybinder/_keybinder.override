@@ -55,7 +55,6 @@ _wrap_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs)
 	GSList *iter;
 	Handler_and_Args *ha;
 	gboolean success;
-	PyObject *ret;
 	
 	len = PyTuple_Size(args);
 	if (len < 2) {
@@ -98,11 +97,10 @@ _wrap_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs)
 	success = keybinder_bind(keystring, &handler_c_func, ha);
 	if (success) {
 		HA_List = g_slist_prepend(HA_List, ha);
+		Py_RETURN_TRUE;
+	} else {
+		Py_RETURN_FALSE;
 	}
-	
-	ret = success ? Py_True : Py_False;
-	Py_INCREF(ret);
-	return ret;
 }
 %%
 override keybinder_unbind kwargs 
