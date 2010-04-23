@@ -1,4 +1,10 @@
 
+keybinder v0.2.0
+----------------
+
+* Split into libkeybinder library and python-keybinder so that the same
+  module can be used from Python or C. The Python bindings are now optional.
+
 keybinder v0.1.1
 ----------------
 
