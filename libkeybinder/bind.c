@@ -24,7 +24,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <sys/socket.h>
+
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
@@ -73,33 +73,26 @@ static guint32 last_event_time = 0;
 static gboolean processing_event = FALSE;
 
 static int
-FinallyGetModifiersForKeycode(register XkbDescPtr     xkb,
-			      KeyCode                 key,
-			      uint                    group,
-			      uint                    level)
+FinallyGetModifiersForKeycode (XkbDescPtr xkb,
+                               KeyCode    key,
+                               uint     group,
+                               uint     level)
 {
 	XkbKeyTypeRec *type;
-	int col, nKeyGroups;
+	int nKeyGroups;
 	unsigned effectiveGroup;
-	KeySym *syms;
 	int k;
-	uint state = 0;
-	state &= ~(1 << 13 | 1 << 14);
-	state |= group << 13;
 
-	nKeyGroups= XkbKeyNumGroups(xkb,key);
-	if ((!XkbKeycodeInRange(xkb,key))||(nKeyGroups==0)) {
+	nKeyGroups = XkbKeyNumGroups(xkb, key);
+	if ((!XkbKeycodeInRange(xkb, key)) || (nKeyGroups == 0)) {
 		return MODIFIERS_ERROR;
 	}
 
-	syms = XkbKeySymsPtr(xkb,key);
-
 	/* Taken from GDK's MyEnhancedXkbTranslateKeyCode */
 	/* find the offset of the effective group */
-	col = 0;
-	effectiveGroup= XkbGroupForCoreState(state);
-	if ( effectiveGroup>=nKeyGroups ) {
-		unsigned groupInfo= XkbKeyGroupInfo(xkb,key);
+	effectiveGroup = group;
+	if (effectiveGroup >= nKeyGroups) {
+		unsigned groupInfo = XkbKeyGroupInfo(xkb,key);
 		switch (XkbOutOfRangeGroupAction(groupInfo)) {
 			default:
 				effectiveGroup %= nKeyGroups;
@@ -109,13 +102,12 @@ FinallyGetModifiersForKeycode(register XkbDescPtr     xkb,
 				break;
 			case XkbRedirectIntoRange:
 				effectiveGroup = XkbOutOfRangeGroupNumber(groupInfo);
-				if (effectiveGroup>=nKeyGroups)
-					effectiveGroup= 0;
+				if (effectiveGroup >= nKeyGroups)
+					effectiveGroup = 0;
 				break;
 		}
 	}
-	col= effectiveGroup*XkbKeyGroupsWidth(xkb,key);
-	type = XkbKeyKeyType(xkb,key,effectiveGroup);
+	type = XkbKeyKeyType(xkb, key, effectiveGroup);
 	for (k = 0; k < type->map_count; k++) {
 		if (type->map[k].active && type->map[k].level == level) {
 			TRACE (g_print("%d, Mod mask: %x Real: %x Virt: %x\n", k, type->map[k].mods.mask, type->map[k].mods.real_mods, type->map[k].mods.vmods));
@@ -129,35 +121,80 @@ FinallyGetModifiersForKeycode(register XkbDescPtr     xkb,
 	return MODIFIERS_NONE;
 }
 
-
+/* Grab or ungrab the keycode+modifiers combination, first plainly, and then
+ * including each ignorable modifier in turn.
+ */
 static gboolean
 grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
-				      uint       keyval,
-				      uint       modifiers,
-				      gboolean   grab)
+                                      uint       keycode,
+                                      uint       modifiers,
+                                      gboolean   grab)
 {
-	/* Ignornable modifiers */
+	guint i;
+	gboolean success = FALSE;
+
+	/* Ignorable modifiers */
 	guint mod_masks [] = {
 		0, /* modifier only */
 		GDK_MOD2_MASK,
 		GDK_LOCK_MASK,
 		GDK_MOD2_MASK | GDK_LOCK_MASK,
 	};
-	int i, k;
+
+	gdk_error_trap_push ();
+
+	for (i = 0; i < G_N_ELEMENTS (mod_masks); i++) {
+
+		if (grab) {
+			XGrabKey (GDK_WINDOW_XDISPLAY (rootwin),
+				  keycode,
+				  modifiers | mod_masks [i],
+				  GDK_WINDOW_XWINDOW (rootwin),
+				  False,
+				  GrabModeAsync,
+				  GrabModeAsync);
+		} else {
+			XUngrabKey (GDK_WINDOW_XDISPLAY (rootwin),
+				    keycode,
+				    modifiers | mod_masks [i],
+				    GDK_WINDOW_XWINDOW (rootwin));
+		}
+	}
+	gdk_flush();
+	if (gdk_error_trap_pop()) {
+		TRACE (g_warning ("Failed bind for %d", keycode));
+	} else {
+		success = TRUE;
+		TRACE (g_print ("Success bind  %d\n", keycode, i));
+	}
+	return success;
+}
+
+/* Grab or ungrab then keyval and modifiers combination, grabbing all key
+ * combinations yielding the same key values.
+ * Includes ignorable modifiers using grab_ungrab_with_ignorable_modifiers.
+ */
+static gboolean
+grab_ungrab (GdkWindow *rootwin,
+             uint       keyval,
+             uint       modifiers,
+             gboolean   grab)
+{
+	int k;
 	GdkKeymapKey *keys;
 	gint n_keys;
 	GdkModifierType add_modifiers;
-	Display *disp;
 	XkbDescPtr xmap;
 	gboolean success = FALSE;
 
-	disp = GDK_WINDOW_XDISPLAY(rootwin);
-	xmap = XkbGetMap(disp, XkbAllClientInfoMask, XkbUseCoreKbd);
+	xmap = XkbGetMap(GDK_WINDOW_XDISPLAY(rootwin),
+	                 XkbAllClientInfoMask,
+	                 XkbUseCoreKbd);
 
 	gdk_keymap_get_entries_for_keyval(NULL,
-					  keyval,
-					  &keys,
-					  &n_keys);
+	                                  keyval,
+	                                  &keys,
+	                                  &n_keys);
 
 	if (n_keys == 0)
 		return FALSE;
@@ -174,47 +211,33 @@ grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
 			continue;
 		}
 
-		add_modifiers = FinallyGetModifiersForKeycode(xmap, 
-					keys[k].keycode,
-					keys[k].group,
-					keys[k].level);
+		add_modifiers = FinallyGetModifiersForKeycode(xmap,
+		                                              keys[k].keycode,
+		                                              keys[k].group,
+		                                              keys[k].level);
+
+		if (add_modifiers == MODIFIERS_ERROR) {
+			continue;
+		}
 		TRACE (g_print("Grabbing keycode: %d, lev: %d, grp: %d\n",
 			keys[k].keycode, keys[k].level, keys[k].group));
 		TRACE (g_print("Modifiers: 0x%x\n",
                       add_modifiers | modifiers));
 		TRACE (g_print("consuming modifiers %x\n",
 			add_modifiers));
-		for (i = 0; i < G_N_ELEMENTS (mod_masks); i++) {
-			gdk_error_trap_push ();
+		if (grab_ungrab_with_ignorable_modifiers(rootwin,
+		                                         keys[k].keycode,
+		                                         add_modifiers | modifiers,
+		                                         grab)) {
 
-			if (grab) {
-				XGrabKey (GDK_WINDOW_XDISPLAY (rootwin), 
-					  keys[k].keycode, 
-					  modifiers | add_modifiers | mod_masks [i], 
-					  GDK_WINDOW_XWINDOW (rootwin), 
-					  False, 
-					  GrabModeAsync,
-					  GrabModeAsync);
-			} else {
-				XUngrabKey (GDK_WINDOW_XDISPLAY (rootwin),
-					    keys[k].keycode,
-					    modifiers | add_modifiers | mod_masks [i], 
-					    GDK_WINDOW_XWINDOW (rootwin));
-			}
-			gdk_flush();
-			if (gdk_error_trap_pop()) {
-				TRACE (
-				g_warning("Failed bind for %d,  i: %d\n",
-					keys[k].keycode, i)
-				);
-			} else {
-				success = TRUE;
-				TRACE (
-					g_print("Success bind  %d, i: %d\n",
-						keys[k].keycode, i)
-				);
+			success = TRUE;
+		} else {
+			/* When grabbing, break on error */
+			if (grab && !success) {
+				break;
 			}
 		}
+
 	}
 	g_free(keys);
 	XkbFreeClientMap(xmap, 0, TRUE);
@@ -223,7 +246,7 @@ grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
 }
 
 static gboolean
-keyvalues_equal(guint kv1, guint kv2)
+keyvalues_equal (guint kv1, guint kv2)
 {
 	return kv1 == kv2;
 }
@@ -232,7 +255,7 @@ keyvalues_equal(guint kv1, guint kv2)
  * while accepting overloaded modifiers (MOD1 and META together)
  */
 static gboolean
-modifiers_equal(GdkModifierType mf1, GdkModifierType mf2)
+modifiers_equal (GdkModifierType mf1, GdkModifierType mf2)
 {
 	GdkModifierType ignored = 0;
 
@@ -278,17 +301,17 @@ do_grab_key (Binding *binding)
 
 	if (modifiers == binding->modifiers &&
 	    (GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK) & modifiers) {
-		g_warning ("Failed to map virtual modifiers\n");
+		g_warning ("Failed to map virtual modifiers");
 		return FALSE;
 	}
 
-	success = grab_ungrab_with_ignorable_modifiers (rootwin,
-					keysym,
-					modifiers,
-					TRUE /* grab */);
+	success = grab_ungrab (rootwin,
+	                       keysym,
+	                       modifiers,
+	                       TRUE /* grab */);
 
 	if (!success) {
-	   g_warning ("Binding '%s' failed!\n", binding->keystring);
+	   g_warning ("Binding '%s' failed!", binding->keystring);
 	}
 
 	return success;
@@ -310,10 +333,10 @@ do_ungrab_key (Binding *binding)
 	modifiers = binding->modifiers;
 	gdk_keymap_map_virtual_modifiers(keymap, &modifiers);
 
-	grab_ungrab_with_ignorable_modifiers (rootwin,
-					      binding->keyval,
-					      modifiers,
-					      FALSE /* ungrab */);
+	grab_ungrab (rootwin,
+	             binding->keyval,
+	             modifiers,
+	             FALSE /* ungrab */);
 
 	return TRUE;
 }
