@@ -1,5 +1,6 @@
 /* bind.h
  * Copyright (C) 2008 Alex Graveley
+ * Copyright (C) 2010 Ulrik Sverdrup <ulrik.sverdrup@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the

@@ -7,7 +7,7 @@
 #include <pygobject.h>
 
 /* include any extra headers needed here */
-#include <bind.h>
+#include <keybinder.h>
 
 void py_keybinder_register_classes(PyObject *d);
 extern PyMethodDef py_keybinder_functions[];
@@ -18,15 +18,15 @@ init_keybinder(void)
     PyObject *m, *d;
 
     /* perform any initialisation required by the library here */
-	init_pygobject();
-	keybinder_init();
-	
+    init_pygobject();
+    keybinder_init();
+
     m = Py_InitModule("_keybinder", py_keybinder_functions);
     d = PyModule_GetDict(m);
-    
+
     /* add anything else to the module dictionary (such as constants) */
     py_keybinder_register_classes(d);
-    
+
     if (PyErr_Occurred())
         Py_FatalError("could not initialise module _keybinder");
 }

@@ -1,0 +1,14 @@
+INCLUDES = $(GTK_CFLAGS)
+
+AM_CFLAGS = -Wall
+
+LIBKEYBINDER_VERSION = 0:0:0
+
+# C library libkeybinder
+#
+keybinderdir = $(libdir)
+keybinder_LTLIBRARIES = libkeybinder.la
+libkeybinder_la_SOURCES = bind.c
+libkeybinder_la_LDFLAGS = $(GTK_LIBS)  -version-info $(LIBKEYBINDER_VERSION)
+include_HEADERS = keybinder.h
+

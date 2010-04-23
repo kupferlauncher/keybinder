@@ -6,7 +6,7 @@ headers
 #define NO_IMPORT_PYGOBJECT
 #include "pygobject.h"
 
-#include <bind.h>
+#include <keybinder.h>
 
 typedef struct _Handler_and_Args {
 	PyObject *handler;

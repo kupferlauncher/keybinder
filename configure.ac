@@ -1,6 +1,6 @@
 AC_INIT(keybinder, 0.1.1,
     [])
-AC_CONFIG_SRCDIR(keybinder/bind.c)
+AC_CONFIG_SRCDIR(libkeybinder/bind.c)
 AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE
@@ -44,15 +44,20 @@ AS_AC_EXPAND(LIBDIR, $libdir)
 AC_SUBST(LIBDIR)
 
 dnl ****************************************************************************
-dnl * PyGTK & co for Gnome Streamer
+dnl * PyGTK & co
 dnl ****************************************************************************
-PKG_CHECK_MODULES(KEYBINDER,
+PKG_CHECK_MODULES(GTK,
 	gtk+-2.0				>= 2.20
+)
+AC_SUBST(GTK_CFLAGS)
+AC_SUBST(GTK_LIBS)
+
+PKG_CHECK_MODULES(PYGTK,
 	pygtk-2.0				>= 2.12
 	pygobject-2.0			>= 2.15.3
 )
-AC_SUBST(KEYBINDER_CFLAGS)
-AC_SUBST(KEYBINDER_LIBS)
+AC_SUBST(PYGTK_CFLAGS)
+AC_SUBST(PYGTK_LIBS)
 
 dnl  **********************************
 dnl  Require XKB
@@ -67,7 +72,8 @@ AC_CHECK_FUNC(XkbQueryExtension, [], AC_MSG_ERROR(Could not find XKB))
 
 CFLAGS="$old_cflags"
 
-X_LDFLAGS="-Wl,--as-needed $LIBS"
+dnl x-- X_LDFLAGS="-Wl,--as-needed $LIBS"
+X_LDFLAGS="$X_LIBS"
 
 AC_SUBST(X_CFLAGS)
 AC_SUBST(X_LDFLAGS)
@@ -118,8 +124,9 @@ dnl * --------------------------------------------------------------------------
 dnl ****************************************************************************
 AC_OUTPUT([
 Makefile
-keybinder/__init__.py
-keybinder/Makefile
+libkeybinder/Makefile
+python-keybinder/__init__.py
+python-keybinder/Makefile
 ])
 
 echo

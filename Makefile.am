@@ -1,4 +1,4 @@
-SUBDIRS = keybinder
+SUBDIRS = libkeybinder python-keybinder
 
 DISTCHECK_CONFIGURE_FLAGS = --disable-scrollkeeper
 
