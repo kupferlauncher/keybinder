@@ -16,7 +16,7 @@ typedef struct _Handler_and_Args {
 
 static GSList *HA_List = NULL;
 
-void handler_c_func (char *keystring, gpointer user_data)
+void handler_c_func (const char *keystring, gpointer user_data)
 {
 	PyGILState_STATE gstate;
 	Handler_and_Args *ha = (Handler_and_Args *) user_data;

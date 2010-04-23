@@ -60,7 +60,7 @@
 
 
 typedef struct _Binding {
-	BindkeyHandler  handler;
+	KeybinderHandler      handler;
 	gpointer              user_data;
 	char                 *keystring;
 	/* GDK "distilled" values */
@@ -414,7 +414,7 @@ keymap_changed (GdkKeymap *map)
 }
 
 void 
-keybinder_init (void)
+keybinder_init ()
 {
 	GdkKeymap *keymap = gdk_keymap_get_default ();
 	GdkWindow *rootwin = gdk_get_default_root_window ();
@@ -438,9 +438,9 @@ keybinder_init (void)
 }
 
 gboolean
-keybinder_bind (const char           *keystring,
-		               BindkeyHandler  handler,
-		       gpointer              user_data)
+keybinder_bind (const char *keystring,
+                KeybinderHandler  handler,
+                gpointer user_data)
 {
 	Binding *binding;
 	gboolean success;
@@ -463,8 +463,8 @@ keybinder_bind (const char           *keystring,
 }
 
 void
-keybinder_unbind (const char           *keystring, 
-			   BindkeyHandler  handler)
+keybinder_unbind (const char *keystring,
+                  KeybinderHandler handler)
 {
 	GSList *iter;
 
