@@ -1,6 +1,8 @@
-SUBDIRS = libkeybinder python-keybinder
+SUBDIRS = libkeybinder
 
-DISTCHECK_CONFIGURE_FLAGS = --disable-scrollkeeper
+if HAVE_PYTHON
+SUBDIRS += python-keybinder
+endif
 
 DISTCLEANFILES = \
 	intltool-extract \
