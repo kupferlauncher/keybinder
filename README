@@ -1,10 +1,23 @@
-``keybinder`` is a python module for registering global key bindings,
+libkeybinder
+============
+
+:Author: Ulrik Sverdrup <ulrik.sverdrup@gmail.com>
+:Homepage: http://kaizer.se/wiki/python-keybinder/
+
+**keybinder** is a library for registering global key bindings,
 for gtk-based applications.
 
-This module originates in `Tomboy`_ and has been widely reused without
-having a separate release. This package has taken the python module
-for Tomboy's keybinder from the `Deskbar Applet`_ project, and broken
-it out to a standalone module.
+The library contains:
+
+* A C library, ``libkeybinder``
+* Python bindings, ``python-keybinder``
+* An ``examples`` directory including C, Python and Lua examples,
+  including experimental Lua bindings
+
+This library originates in `Tomboy`_ and has been widely reused without
+having a separate release. This package has taken the python bindings
+from the `Deskbar Applet`_ project, and broken it out to a standalone
+project. The library was subsequently reqwritten in major parts.
 
 The module is licenced under the GNU General Public License v2 (or at
 your option, any later version), see the included file COPYING for
@@ -13,4 +26,4 @@ details.
 .. _Tomboy:            http://projects.gnome.org/tomboy/
 .. _`Deskbar Applet`:  http://projects.gnome.org/deskbar-applet/
 
-Homepage: http://kaizer.se/wiki/python-keybinder/
+.. vim: ft=rst tw=72
