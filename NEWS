@@ -2,6 +2,8 @@
 keybinder v0.2.0
 ----------------
 
+Released Saturday, 24 April 2010
+
 * Split into libkeybinder library and python-keybinder so that the same
   module can be used from Python or C. The Python bindings are now optional.
 
