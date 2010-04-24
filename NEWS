@@ -5,6 +5,9 @@ keybinder v0.2.0
 * Split into libkeybinder library and python-keybinder so that the same
   module can be used from Python or C. The Python bindings are now optional.
 
+* Add examples/ directory with C, Python and Lua examples (including
+  experimental Lua bindings).
+
 keybinder v0.1.1
 ----------------
 

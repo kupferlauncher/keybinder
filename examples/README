@@ -1,0 +1,20 @@
+Examples for libkeybinder
+=========================
+
+main.c contains a minimal C program using libkeybinder. Run it using::
+
+    make main
+    ./main
+
+example.py contains a minimal Python program using keybinder. Run it using::
+
+    ./example.py
+
+Note that you must remove any 'keybinder.so' (from Lua bindings) for the Python example to work.
+
+lkeybinder.c contains experimental Lua bindings for libkeybinder.
+Run it using::
+
+    make all
+    ./example.lua
+
