@@ -42,13 +42,13 @@
 #  define TRACE(x) do {} while (FALSE);
 #endif
 
-#define MODIFIERS_ERROR -1
+#define MODIFIERS_ERROR ((GdkModifierType)(-1))
 #define MODIFIERS_NONE 0
 
 /* Group to use: Which of configured keyboard Layouts
  * Since grabbing a key blocks its use, we can't grab the corresponding
  * (physical) keys for alternative layouts.
- * 
+ *
  * Because of this, we interpret all keys relative to the default
  * keyboard layout.
  *
@@ -59,28 +59,31 @@
 #define WE_ONLY_USE_ONE_GROUP 0
 
 
-typedef struct _Binding {
+struct Binding {
 	KeybinderHandler      handler;
-	gpointer              user_data;
+	void                 *user_data;
 	char                 *keystring;
 	/* GDK "distilled" values */
 	guint                 keyval;
 	GdkModifierType       modifiers;
-} Binding;
+};
 
 static GSList *bindings = NULL;
 static guint32 last_event_time = 0;
 static gboolean processing_event = FALSE;
 
-static int
+/* Return the modifier mask that needs to be pressed to produce key in the
+ * given group (keyboard layout) and level ("shift level").
+ */
+static GdkModifierType
 FinallyGetModifiersForKeycode (XkbDescPtr xkb,
                                KeyCode    key,
                                uint     group,
                                uint     level)
 {
-	XkbKeyTypeRec *type;
 	int nKeyGroups;
-	unsigned effectiveGroup;
+	int effectiveGroup;
+	XkbKeyTypeRec *type;
 	int k;
 
 	nKeyGroups = XkbKeyNumGroups(xkb, key);
@@ -110,9 +113,9 @@ FinallyGetModifiersForKeycode (XkbDescPtr xkb,
 	type = XkbKeyKeyType(xkb, key, effectiveGroup);
 	for (k = 0; k < type->map_count; k++) {
 		if (type->map[k].active && type->map[k].level == level) {
-			TRACE (g_print("%d, Mod mask: %x Real: %x Virt: %x\n", k, type->map[k].mods.mask, type->map[k].mods.real_mods, type->map[k].mods.vmods));
 			if (type->preserve) {
-				return type->map[k].mods.mask & ~type->preserve[k].mask;
+				return (type->map[k].mods.mask &
+				        ~type->preserve[k].mask);
 			} else {
 				return type->map[k].mods.mask;
 			}
@@ -144,20 +147,19 @@ grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
 	gdk_error_trap_push ();
 
 	for (i = 0; i < G_N_ELEMENTS (mod_masks); i++) {
-
 		if (grab) {
 			XGrabKey (GDK_WINDOW_XDISPLAY (rootwin),
-				  keycode,
-				  modifiers | mod_masks [i],
-				  GDK_WINDOW_XWINDOW (rootwin),
-				  False,
-				  GrabModeAsync,
-				  GrabModeAsync);
+			          keycode,
+			          modifiers | mod_masks [i],
+			          GDK_WINDOW_XWINDOW (rootwin),
+			          False,
+			          GrabModeAsync,
+			          GrabModeAsync);
 		} else {
 			XUngrabKey (GDK_WINDOW_XDISPLAY (rootwin),
-				    keycode,
-				    modifiers | mod_masks [i],
-				    GDK_WINDOW_XWINDOW (rootwin));
+			            keycode,
+			            modifiers | mod_masks [i],
+			            GDK_WINDOW_XWINDOW (rootwin));
 		}
 	}
 	gdk_flush();
@@ -165,7 +167,6 @@ grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
 		TRACE (g_warning ("Failed bind for %d", keycode));
 	} else {
 		success = TRUE;
-		TRACE (g_print ("Success bind  %d\n", keycode, i));
 	}
 	return success;
 }
@@ -191,18 +192,12 @@ grab_ungrab (GdkWindow *rootwin,
 	                 XkbAllClientInfoMask,
 	                 XkbUseCoreKbd);
 
-	gdk_keymap_get_entries_for_keyval(NULL,
-	                                  keyval,
-	                                  &keys,
-	                                  &n_keys);
+	gdk_keymap_get_entries_for_keyval(NULL, keyval, &keys, &n_keys);
 
 	if (n_keys == 0)
 		return FALSE;
 
-
 	for (k = 0; k < n_keys; k++) {
-		TRACE (g_print("Keycode %d  group %d level %d\n",
-			keys[k].keycode, keys[k].group, keys[k].level));
 		/* NOTE: We only bind for the first group,
 		 * so regardless of current keyboard layout, it will
 		 * grab the key from the default Layout.
@@ -219,12 +214,10 @@ grab_ungrab (GdkWindow *rootwin,
 		if (add_modifiers == MODIFIERS_ERROR) {
 			continue;
 		}
-		TRACE (g_print("Grabbing keycode: %d, lev: %d, grp: %d\n",
+		TRACE (g_print("grab/ungrab keycode: %d, lev: %d, grp: %d, ",
 			keys[k].keycode, keys[k].level, keys[k].group));
-		TRACE (g_print("Modifiers: 0x%x\n",
-                      add_modifiers | modifiers));
-		TRACE (g_print("consuming modifiers %x\n",
-			add_modifiers));
+		TRACE (g_print("modifiers: 0x%x (consumed: 0x%x)\n",
+		               add_modifiers | modifiers, add_modifiers));
 		if (grab_ungrab_with_ignorable_modifiers(rootwin,
 		                                         keys[k].keycode,
 		                                         add_modifiers | modifiers,
@@ -270,11 +263,11 @@ modifiers_equal (GdkModifierType mf1, GdkModifierType mf2)
 	if ((mf1 & ~ignored) == (mf2 & ~ignored)) {
 		return TRUE;
 	}
-        return FALSE;
+	return FALSE;
 }
 
-static gboolean 
-do_grab_key (Binding *binding)
+static gboolean
+do_grab_key (struct Binding *binding)
 {
 	gboolean success;
 	GdkWindow *rootwin = gdk_get_default_root_window ();
@@ -288,13 +281,14 @@ do_grab_key (Binding *binding)
 		return FALSE;
 
 	gtk_accelerator_parse(binding->keystring, &keysym, &modifiers);
+
 	if (keysym == 0)
 		return FALSE;
 
-	TRACE (g_print ("Got accel %d, 0x%x\n", keysym, modifiers));
-
 	binding->keyval = keysym;
 	binding->modifiers = modifiers;
+	TRACE (g_print ("Grabbing keyval: %d, vmodifiers: 0x%x, name: %s\n",
+	                keysym, modifiers, binding->keystring));
 
 	/* Map virtual modifiers to non-virtual modifiers */
 	gdk_keymap_map_virtual_modifiers(keymap, &modifiers);
@@ -305,10 +299,7 @@ do_grab_key (Binding *binding)
 		return FALSE;
 	}
 
-	success = grab_ungrab (rootwin,
-	                       keysym,
-	                       modifiers,
-	                       TRUE /* grab */);
+	success = grab_ungrab (rootwin, keysym, modifiers, TRUE /* grab */);
 
 	if (!success) {
 	   g_warning ("Binding '%s' failed!", binding->keystring);
@@ -317,50 +308,43 @@ do_grab_key (Binding *binding)
 	return success;
 }
 
-static gboolean 
-do_ungrab_key (Binding *binding)
+static gboolean
+do_ungrab_key (struct Binding *binding)
 {
 	GdkKeymap *keymap = gdk_keymap_get_default ();
 	GdkWindow *rootwin = gdk_get_default_root_window ();
 	GdkModifierType modifiers;
 
-	TRACE (g_print ("Removing grab for '%s'\n", binding->keystring));
-
 	if (keymap == NULL || rootwin == NULL)
 		return FALSE;
+
+	TRACE (g_print ("Ungrabbing keyval: %d, vmodifiers: 0x%x, name: %s\n",
+	                binding->keyval, binding->modifiers, binding->keystring));
 
 	/* Map virtual modifiers to non-virtual modifiers */
 	modifiers = binding->modifiers;
 	gdk_keymap_map_virtual_modifiers(keymap, &modifiers);
 
-	grab_ungrab (rootwin,
-	             binding->keyval,
-	             modifiers,
-	             FALSE /* ungrab */);
-
+	grab_ungrab (rootwin, binding->keyval, modifiers, FALSE /* ungrab */);
 	return TRUE;
 }
 
 static GdkFilterReturn
 filter_func (GdkXEvent *gdk_xevent, GdkEvent *event, gpointer data)
 {
-	GdkFilterReturn return_val = GDK_FILTER_CONTINUE;
 	XEvent *xevent = (XEvent *) gdk_xevent;
-	guint event_mods;
-	GSList *iter;
-	GdkModifierType consumed, modifiers;
-	guint keyval;
 	GdkKeymap *keymap = gdk_keymap_get_default();
+	guint keyval;
+	GdkModifierType consumed, modifiers;
 	guint mod_mask = gtk_accelerator_get_default_mod_mask();
-	GdkEventKey *keyevent;
+	GSList *iter;
 
-	TRACE (g_print ("Got Event! %d, %d\n", xevent->type, event->type));
-
-	keyevent = (GdkEventKey *)event;
+	(void) event;
+	(void) data;
 
 	switch (xevent->type) {
 	case KeyPress:
-                modifiers = xevent->xkey.state;
+		modifiers = xevent->xkey.state;
 
 		TRACE (g_print ("Got KeyPress keycode: %d, modifiers: 0x%x\n", 
 				xevent->xkey.keycode, 
@@ -369,37 +353,34 @@ filter_func (GdkXEvent *gdk_xevent, GdkEvent *event, gpointer data)
 		gdk_keymap_translate_keyboard_state(
 				keymap,
 				xevent->xkey.keycode,
-                                modifiers,
+				modifiers,
 				/* See top comment why we don't use this here:
 				   XkbGroupForCoreState (xevent->xkey.state)
 				 */
 				WE_ONLY_USE_ONE_GROUP,
 				&keyval, NULL, NULL, &consumed);
-                TRACE (g_print("Consumed: 0x%x\n", consumed));
-                modifiers &= ~consumed;
-                /* Map non-virtual to virtual modifiers */
-                gdk_keymap_add_virtual_modifiers(keymap, &modifiers);
 
-		/* 
+		/* Map non-virtual to virtual modifiers */
+		modifiers &= ~consumed;
+		gdk_keymap_add_virtual_modifiers(keymap, &modifiers);
+		modifiers &= mod_mask;
+
+		TRACE (g_print ("Translated keyval: %d, vmodifiers: 0x%x, name: %s\n",
+		                keyval, modifiers,
+		                gtk_accelerator_name(keyval, modifiers)));
+
+		/*
 		 * Set the last event time for use when showing
 		 * windows to avoid anti-focus-stealing code.
 		 */
 		processing_event = TRUE;
 		last_event_time = xevent->xkey.time;
 
-
-		event_mods = modifiers & mod_mask;
-
-		TRACE (g_print ("Translated keyval: %d, modifiers: 0x%x\n", 
-				keyval, 
-				event_mods));
-
-
 		for (iter = bindings; iter != NULL; iter = iter->next) {
-			Binding *binding = (Binding *) iter->data;
+			struct Binding *binding = iter->data;
 
 			if (keyvalues_equal(binding->keyval, keyval) &&
-			    modifiers_equal(binding->modifiers, event_mods)) {
+			    modifiers_equal(binding->modifiers, modifiers)) {
 				TRACE (g_print ("Calling handler for '%s'...\n", 
 						binding->keystring));
 
@@ -415,43 +396,43 @@ filter_func (GdkXEvent *gdk_xevent, GdkEvent *event, gpointer data)
 		break;
 	}
 
-	return return_val;
+	return GDK_FILTER_CONTINUE;
 }
 
-static void 
+static void
 keymap_changed (GdkKeymap *map)
 {
 	GSList *iter;
 
+	(void) map;
+
 	TRACE (g_print ("Keymap changed! Regrabbing keys..."));
 
 	for (iter = bindings; iter != NULL; iter = iter->next) {
-		Binding *binding = (Binding *) iter->data;
+		struct Binding *binding = iter->data;
 		do_ungrab_key (binding);
 	}
 
 	for (iter = bindings; iter != NULL; iter = iter->next) {
-		Binding *binding = (Binding *) iter->data;
+		struct Binding *binding = iter->data;
 		do_grab_key (binding);
 	}
 }
 
-void 
+void
 keybinder_init ()
 {
 	GdkKeymap *keymap = gdk_keymap_get_default ();
 	GdkWindow *rootwin = gdk_get_default_root_window ();
 
-	gdk_window_add_filter (rootwin, 
-			       filter_func, 
-			       NULL);
+	gdk_window_add_filter (rootwin, filter_func, NULL);
 
 	/* Workaround: Make sure modmap is up to date
 	 * There is possibly a bug in GTK+ where virtual modifiers are not
 	 * mapped because the modmap is not updated. The following function
 	 * updates it.
 	 */
-	(void)gdk_keymap_have_bidi_layouts(keymap);
+	(void) gdk_keymap_have_bidi_layouts(keymap);
 
 
 	g_signal_connect (keymap, 
@@ -462,13 +443,13 @@ keybinder_init ()
 
 gboolean
 keybinder_bind (const char *keystring,
-                KeybinderHandler  handler,
-                gpointer user_data)
+                KeybinderHandler handler,
+                void *user_data)
 {
-	Binding *binding;
+	struct Binding *binding;
 	gboolean success;
 
-	binding = g_new0 (Binding, 1);
+	binding = g_new0 (struct Binding, 1);
 	binding->keystring = g_strdup (keystring);
 	binding->handler = handler;
 	binding->user_data = user_data;
@@ -486,13 +467,12 @@ keybinder_bind (const char *keystring,
 }
 
 void
-keybinder_unbind (const char *keystring,
-                  KeybinderHandler handler)
+keybinder_unbind (const char *keystring, KeybinderHandler handler)
 {
 	GSList *iter;
 
 	for (iter = bindings; iter != NULL; iter = iter->next) {
-		Binding *binding = (Binding *) iter->data;
+		struct Binding *binding = iter->data;
 
 		if (strcmp (keystring, binding->keystring) != 0 ||
 		    handler != binding->handler) 
@@ -511,7 +491,7 @@ keybinder_unbind (const char *keystring,
 guint32
 keybinder_get_current_event_time (void)
 {
-	if (processing_event) 
+	if (processing_event)
 		return last_event_time;
 	else
 		return GDK_CURRENT_TIME;
