@@ -1,4 +1,11 @@
 
+keybinder v0.2.1
+----------------
+
+Released Monday, 26 April 2010
+
+* Release key grabs if binding fails partially.
+
 keybinder v0.2.0
 ----------------
 

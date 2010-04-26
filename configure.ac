@@ -1,7 +1,21 @@
-AC_INIT(keybinder, 0.2.0,
+AC_INIT(keybinder, 0.2.1,
     [])
 AC_CONFIG_SRCDIR(libkeybinder/bind.c)
 AC_CONFIG_MACRO_DIR([m4])
+
+# Libtool version
+# When library changes: increment current, reset revision
+# If library changed but is backwards-compatible: increment age
+# Only internal changes: increment revision
+m4_define([keybinder_lt_current],  [0])
+m4_define([keybinder_lt_revision], [1])
+m4_define([keybinder_lt_age],      [0])
+LT_CURRENT=keybinder_lt_current
+LT_REVISION=keybinder_lt_revision
+LT_AGE=keybinder_lt_age
+AC_SUBST(LT_CURRENT)
+AC_SUBST(LT_REVISION)
+AC_SUBST(LT_AGE)
 
 AM_INIT_AUTOMAKE
 GNOME_COMMON_INIT
