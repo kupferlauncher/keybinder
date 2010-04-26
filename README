@@ -2,10 +2,10 @@ libkeybinder
 ============
 
 :Author: Ulrik Sverdrup <ulrik.sverdrup@gmail.com>
-:Homepage: http://kaizer.se/wiki/python-keybinder/
+:Homepage: http://kaizer.se/wiki/keybinder/
 
-**keybinder** is a library for registering global key bindings,
-for gtk-based applications.
+**keybinder** is a library for registering global keyboard shortcuts.
+Keybinder works with GTK-based applications using the X Window System.
 
 The library contains:
 
@@ -17,7 +17,7 @@ The library contains:
 This library originates in `Tomboy`_ and has been widely reused without
 having a separate release. This package has taken the python bindings
 from the `Deskbar Applet`_ project, and broken it out to a standalone
-project. The library was subsequently reqwritten in major parts.
+project. The library was subsequently rewritten in major parts.
 
 The module is licenced under the GNU General Public License v2 (or at
 your option, any later version), see the included file COPYING for
