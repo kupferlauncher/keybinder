@@ -83,9 +83,15 @@ dnl * Python
 dnl ****************************************************************************
 AC_ARG_ENABLE(python,
              AS_HELP_STRING([--disable-python],
-                            [disable python bindings [[default=yes]]]),
+                            [disable python bindings [default=yes]]),
 			    ,
                             [enable_python=yes])
+
+AC_ARG_ENABLE(lua,
+             AS_HELP_STRING([--disable-lua],
+                            [disable lua bindings [default=if found]]),
+			    [enable_lua=no],
+                            [enable_lua=yes])
 
 if test "x$enable_python" != "xno"; then
 	dnl ****************************************************************************
@@ -152,17 +158,23 @@ dnl ****************************************************************************
 dnl  Check for Lua 5.1
 dnl ****************************************************************************
 
-AX_LUA_HEADERS
-if test "x$ac_cv_header_lua_h" = "xyes" ; then
-	AX_LUA_LIB_VERSION([501], [502])
-	LUA_VERSION=[5.1]
-	AC_SUBST(LUA_VERSION)
-	AC_SUBST(LUA_INCLUDE)
-	have_lua="yes"
+if test "x$enable_lua" != "xno"; then
+  AX_LUA_HEADERS
+  if test "x$ac_cv_header_lua_h" = "xyes" ; then
+    AX_LUA_LIB_VERSION([501], [502])
+    LUA_VERSION=[5.1]
+    AX_LUA_LIBS
+    AC_SUBST(LUA_VERSION)
+    AC_SUBST(LUA_LIB)
+    AC_SUBST(LUA_INCLUDE)
+    have_lua="yes"
+  else
+    have_lua="no"
+  fi
 else
-	have_lua="no"
+  have_lua="no"
 fi
-AM_CONDITIONAL(HAVE_LUA, test "x$have_lua" != "xno")
+AM_CONDITIONAL(HAVE_LUA, test "x$have_lua" = "xyes")
 
 dnl ****************************************************************************
 dnl * --------------------------------------------------------------------------
