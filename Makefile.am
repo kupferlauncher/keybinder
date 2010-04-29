@@ -4,6 +4,10 @@ if HAVE_PYTHON
 SUBDIRS += python-keybinder
 endif
 
+if HAVE_LUA
+SUBDIRS += lua-keybinder
+endif
+
 EXTRA_DIST = \
 	examples/Makefile  \
 	examples/README    \

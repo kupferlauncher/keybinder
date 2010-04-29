@@ -149,11 +149,28 @@ fi
 AM_CONDITIONAL(HAVE_PYTHON, test "x$enable_python" != "xno")
 
 dnl ****************************************************************************
+dnl  Check for Lua 5.1
+dnl ****************************************************************************
+
+AX_LUA_HEADERS
+if test "x$ac_cv_header_lua_h" = "xyes" ; then
+	AX_LUA_LIB_VERSION([501], [502])
+	LUA_VERSION=[5.1]
+	AC_SUBST(LUA_VERSION)
+	AC_SUBST(LUA_INCLUDE)
+	have_lua="yes"
+else
+	have_lua="no"
+fi
+AM_CONDITIONAL(HAVE_LUA, test "x$have_lua" != "xno")
+
+dnl ****************************************************************************
 dnl * --------------------------------------------------------------------------
 dnl ****************************************************************************
 AC_OUTPUT([
 Makefile
 libkeybinder/Makefile
+lua-keybinder/Makefile
 python-keybinder/__init__.py
 python-keybinder/Makefile
 ])
@@ -165,6 +182,7 @@ echo
 echo Prefix............... : $prefix
 echo libkeybinder ........ : yes
 echo python-keybinder .... : $have_python
+echo lua-keybinder ....... : $have_lua
 echo 
 
 echo "Now type make to compile"

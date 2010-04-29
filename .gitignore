@@ -15,6 +15,8 @@
 /libkeybinder/Makefile.in
 /libtool
 /ltmain.sh
+/lua-keybinder/Makefile
+/lua-keybinder/Makefile.in
 /m4/*.m4
 /missing
 /py-compile
