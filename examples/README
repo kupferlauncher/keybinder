@@ -15,6 +15,10 @@ example.py contains a minimal Python program using keybinder. Run it using::
 
 example.lua contains a minimal Lua program using keybinder. Run it using:: 
 
-    make all
+    make lua
     ./example.lua
 
+vexample.vala contains a minimal Vala program using keybinder. Run it using::
+
+    make vala
+    ./vexample

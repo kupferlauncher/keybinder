@@ -6,7 +6,11 @@ LUA_LDFLAGS = $(shell pkg-config --libs lua5.1)
 
 KEYB_LDFLAGS = -lkeybinder
 
-all: minigtk.so main
+VALAC = valac
+
+all: main lua vala
+
+lua: minigtk.so
 
 # Example C program with libkeybinder
 main: main.c
@@ -18,7 +22,12 @@ minigtk.so: lminigtk.c
 	$(CC) $(GTK_CFLAGS) $(GTK_LDFLAGS) \
 		$(LUA_CFLAGS) $(LUA_LDFLAGS) $< -shared -o $@
 
-clean:
-	rm -f *.so *.lo main
+vala: vexample
 
-.PHONY: clean all
+vexample: vexample.vala keybinder.vapi
+	$(VALAC) --pkg gtk+-2.0 --pkg keybinder --vapidir=. $<
+
+clean:
+	rm -f *.so *.lo main vexample
+
+.PHONY: clean all lua vala
