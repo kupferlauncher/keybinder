@@ -4,7 +4,7 @@ GTK_LDFLAGS = $(shell pkg-config --libs gtk+-2.0)
 LUA_CFLAGS = $(shell pkg-config --cflags lua5.1)
 LUA_LDFLAGS = $(shell pkg-config --libs lua5.1)
 
-KEYB_LDFLAGS = -lkeybinder
+KEYB_LDFLAGS = $(shell pkg-config --libs keybinder)
 
 VALAC = valac
 
