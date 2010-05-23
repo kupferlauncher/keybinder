@@ -12,3 +12,6 @@ libkeybinder_la_SOURCES = bind.c
 libkeybinder_la_LDFLAGS = $(GTK_LIBS)  -version-info $(LIBKEYBINDER_VERSION)
 include_HEADERS = keybinder.h
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = keybinder.pc
+

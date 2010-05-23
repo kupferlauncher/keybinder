@@ -182,6 +182,7 @@ dnl ****************************************************************************
 AC_OUTPUT([
 Makefile
 libkeybinder/Makefile
+libkeybinder/keybinder.pc
 lua-keybinder/Makefile
 python-keybinder/__init__.py
 python-keybinder/Makefile
