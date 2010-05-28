@@ -43,15 +43,29 @@ static void lkeybinder_check_init () {
   }
 }
 
+/* Callback closure with upvalues:
+ * 1  Lua callback function
+ * 2  Keystring
+ * 3  User data
+ */
+static int lkeybinder_closure (lua_State *L)
+{
+  /* Call callback f(keystring, user_data) */
+  lua_pushvalue(L, lua_upvalueindex(1));
+  lua_pushvalue(L, lua_upvalueindex(2));
+  lua_pushvalue(L, lua_upvalueindex(3));
+  lua_call(L, 2, 0);
+  return 0;
+}
+
 static void lkeybinder_handler (const char *keystring, void *user_data) {
   lua_State *L = user_data;
   /* get table */
   lua_rawgeti(L, LUA_REGISTRYINDEX, lkeybinder_reg_key);
   lua_pushstring(L, keystring);
   lua_rawget(L, -2);
-  /* call callback with the keystring as first argument */
-  lua_pushstring(L, keystring);
-  if (lua_pcall(L, 1, 0, 0)) {
+  /* call callback closure */
+  if (lua_pcall(L, 0, 0, 0)) {
     fprintf(stderr, "Error in callback:\n\t%s\n", lua_tostring(L, -1));
     lua_pop(L, 1);
   }
@@ -62,24 +76,34 @@ static void lkeybinder_handler (const char *keystring, void *user_data) {
 static int lkeybinder_bind (lua_State *L)
 {
   int success;
+  int table_index;
   const char *keystr = luaL_checkstring(L, 1);
   if (!lua_isfunction(L, 2)) {
     return luaL_argerror(L, 2, "is not a function");
   }
+  /* argument 3 is nil/none or user data */
+  lua_settop(L, 3);
   lkeybinder_check_init();
-  lua_settop(L, 2);
-  /* put table into stack pos 3 */
+  /* get RefTable */
   lua_rawgeti(L, LUA_REGISTRYINDEX, lkeybinder_reg_key);
+  table_index = lua_gettop(L);
+
   lua_pushstring(L, keystr);
-  lua_rawget(L, -2);
+  lua_rawget(L, table_index);
   if (!lua_isnil(L, -1)) {
     success = false;
   } else {
     success = keybinder_bind(keystr, lkeybinder_handler, L);
     if (success) {
       lua_pushstring(L, keystr);
+      /* Create a closure with three upvalues
+       * RefTable[keystr] = <closure>
+       */
       lua_pushvalue(L, 2);
-      lua_rawset(L, 3);
+      lua_pushstring(L, keystr);
+      lua_pushvalue(L, 3);
+      lua_pushcclosure(L, lkeybinder_closure, 3);
+      lua_rawset(L, table_index);
     }
   }
 
@@ -92,7 +116,7 @@ static int lkeybinder_unbind (lua_State *L)
 {
   const char *keystr = luaL_checkstring(L, 1);
   keybinder_unbind(keystr, lkeybinder_handler);
-  /* get table */
+  /* RefTable[keystring] = nil */
   lua_rawgeti(L, LUA_REGISTRYINDEX, lkeybinder_reg_key);
   lua_pushstring(L, keystr);
   lua_pushnil(L);

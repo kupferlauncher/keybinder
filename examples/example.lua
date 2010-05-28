@@ -8,12 +8,13 @@
 require "minigtk"
 require "keybinder"
 
-function callback(keystring)
+function callback(keystring, user_data)
   print("In callback", keystring, keybinder.get_current_event_time())
+  print("Userdata: ", user_data)
   minigtk.main_quit()
 end
 
 minigtk.init()
-keybinder.bind("<Control>A", callback)
+keybinder.bind("<Control>A", callback, {1,2,3})
 print("Press <Control>A to activate keybinding and quit");
 minigtk.main()
