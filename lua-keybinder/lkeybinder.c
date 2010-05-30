@@ -78,11 +78,10 @@ static int lkeybinder_bind (lua_State *L)
   int success;
   int table_index;
   const char *keystr = luaL_checkstring(L, 1);
-  if (!lua_isfunction(L, 2)) {
-    return luaL_argerror(L, 2, "is not a function");
-  }
+  luaL_checktype(L, 2, LUA_TFUNCTION);
   /* argument 3 is nil/none or user data */
   lua_settop(L, 3);
+
   lkeybinder_check_init();
   /* get RefTable */
   lua_rawgeti(L, LUA_REGISTRYINDEX, lkeybinder_reg_key);
