@@ -163,9 +163,7 @@ if test "x$enable_lua" != "xno"; then
   if test "x$ac_cv_header_lua_h" = "xyes" ; then
     AX_LUA_LIB_VERSION([501], [502])
     LUA_VERSION=[5.1]
-    AX_LUA_LIBS
     AC_SUBST(LUA_VERSION)
-    AC_SUBST(LUA_LIB)
     AC_SUBST(LUA_INCLUDE)
     have_lua="yes"
   else
