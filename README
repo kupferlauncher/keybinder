@@ -12,16 +12,27 @@ The library contains:
 * A C library, ``libkeybinder``
 * Lua bindings, ``lua-keybinder``
 * Python bindings, ``python-keybinder``
-* An ``examples`` directory including C, Python and Lua example
-  programs.
+* An ``examples`` directory with programs in C, Lua, Python and Vala.
+
+
+Compile and Installation Notes
+------------------------------
 
 If you don't have the neccessary dependencies, and don't want to build 
 the python bindings, you have to explicitly disable them using the
 ``--disable-python`` option with configure.
 
-It is possible you need to tell configure where Lua includes are to
-be found using the ``--with-lua-includes=`` option, and how to find the
-right library version using the ``--with-lua-suffix=5.1`` option.
+It is possible you need to tell configure where Lua includes are to be
+found using (adjusting the path appropriately)::
+
+    ./configure CPPFLAGS=-I/usr/include/lua5.1
+
+If you want to compile with reduced library linking, configure using::
+
+    CC="cc -Wl,--as-needed" ./configure
+
+History
+-------
 
 This library originates in `Tomboy`_ and has been widely reused without
 having a separate release. This package has taken the python bindings

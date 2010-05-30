@@ -1,4 +1,11 @@
 
+keybinder v0.2.2
+----------------
+
+* Add pkg-config file contributed by Jérôme Guelfucci
+* Add Vala example and .vapi file to examples/
+* Make lua-keybinder installable (this is experimental), using ax_lua.m4
+
 keybinder v0.2.1
 ----------------
 
@@ -75,4 +82,5 @@ Released 22 November 2009
 * Fix language errors in documentation
 
 
+.. -*- encoding: UTF-8 -*-
 .. vim: ft=rst tw=72
