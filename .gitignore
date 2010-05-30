@@ -13,6 +13,7 @@
 /install-sh
 /libkeybinder/Makefile
 /libkeybinder/Makefile.in
+/libkeybinder/keybinder.pc
 /libtool
 /ltmain.sh
 /lua-keybinder/Makefile
