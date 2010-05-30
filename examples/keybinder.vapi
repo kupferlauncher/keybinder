@@ -7,6 +7,6 @@ namespace Keybinder {
 
 	public void init();
 	public bool bind (string keystring, Handler hander, void *udata);
-	void unbind (string keystring, Handler handler);
+	public void unbind (string keystring, Handler handler);
 	public uint32 get_current_event_time ();
 }
