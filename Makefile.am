@@ -13,8 +13,9 @@ EXTRA_DIST = \
 	examples/README    \
 	examples/example.py \
 	examples/example.lua \
-	examples/lkeybinder.c \
 	examples/lminigtk.c \
+	examples/keybinder.vapi \
+	examples/vexample.vala \
 	examples/main.c
 
 
