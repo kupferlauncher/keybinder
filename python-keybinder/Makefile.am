@@ -17,8 +17,7 @@ _keybinder_PYTHON = \
 CLEANFILES = _keybinder.c
 EXTRA_DIST = \
 	_keybinder.defs \
-	_keybinder.override \
-	gen-defs.sh
+	_keybinder.override
 
 _keybinder.c: _keybinder.defs _keybinder.override
 
