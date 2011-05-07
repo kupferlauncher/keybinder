@@ -151,7 +151,7 @@ grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
 			XGrabKey (GDK_WINDOW_XDISPLAY (rootwin),
 			          keycode,
 			          modifiers | mod_masks [i],
-			          GDK_WINDOW_XWINDOW (rootwin),
+			          GDK_WINDOW_XID (rootwin),
 			          False,
 			          GrabModeAsync,
 			          GrabModeAsync);
@@ -159,7 +159,7 @@ grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
 			XUngrabKey (GDK_WINDOW_XDISPLAY (rootwin),
 			            keycode,
 			            modifiers | mod_masks [i],
-			            GDK_WINDOW_XWINDOW (rootwin));
+			            GDK_WINDOW_XID (rootwin));
 		}
 	}
 	gdk_flush();
@@ -189,6 +189,7 @@ grab_ungrab (GdkWindow *rootwin,
              gboolean   grab)
 {
 	int k;
+	GdkKeymap *map;
 	GdkKeymapKey *keys;
 	gint n_keys;
 	GdkModifierType add_modifiers;
@@ -199,7 +200,8 @@ grab_ungrab (GdkWindow *rootwin,
 	                 XkbAllClientInfoMask,
 	                 XkbUseCoreKbd);
 
-	gdk_keymap_get_entries_for_keyval(NULL, keyval, &keys, &n_keys);
+	map = gdk_keymap_get_default();
+	gdk_keymap_get_entries_for_keyval(map, keyval, &keys, &n_keys);
 
 	if (n_keys == 0)
 		return FALSE;
