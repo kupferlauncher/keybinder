@@ -25,3 +25,4 @@ DISTCLEANFILES = \
 	intltool-update \
 	gnome-doc-utils.make
 
+ACLOCAL_AMFLAGS = -I m4
