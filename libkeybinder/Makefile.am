@@ -27,13 +27,13 @@ INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 if HAVE_INTROSPECTION
 introspection_sources = $(libkeybinder_la_SOURCES) $(include_HEADERS)
 
-Keybinder-1.0.gir: libkeybinder.la
-Keybinder_1_0_gir_INCLUDES = GObject-2.0
-Keybinder_1_0_gir_CFLAGS = $(INCLUDES)
-Keybinder_1_0_gir_LIBS = libkeybinder.la
-Keybinder_1_0_gir_FILES = $(introspection_sources)
-Keybinder_1_0_gir_SCANNERFLAGS = --warn-all
-INTROSPECTION_GIRS += Keybinder-1.0.gir
+Keybinder-0.0.gir: libkeybinder.la
+Keybinder_0_0_gir_INCLUDES = GObject-2.0
+Keybinder_0_0_gir_CFLAGS = $(INCLUDES)
+Keybinder_0_0_gir_LIBS = libkeybinder.la
+Keybinder_0_0_gir_FILES = $(introspection_sources)
+Keybinder_0_0_gir_SCANNERFLAGS = --warn-all
+INTROSPECTION_GIRS += Keybinder-0.0.gir
 
 girdir = $(datadir)/gir-1.0
 gir_DATA = $(INTROSPECTION_GIRS)
