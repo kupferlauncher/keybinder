@@ -2,6 +2,8 @@
 keybinder v0.2.2
 ----------------
 
+Released Sunday, 20 May 2010
+
 * Add pkg-config file contributed by Jérôme Guelfucci
 * Add Vala example and .vapi file to examples/
 * Make lua-keybinder installable (this is experimental), using ax_lua.m4
