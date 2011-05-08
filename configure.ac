@@ -54,9 +54,23 @@ AC_SUBST(LIBDIR)
 dnl ****************************************************************************
 dnl * GTK
 dnl ****************************************************************************
-PKG_CHECK_MODULES(GTK,
-	gtk+-2.0				>= 2.20
-)
+AC_ARG_ENABLE(gtk,
+	      [  --enable-gtk[=GTKVER] Supports gtk2 (default) or gtk3],
+	      [ if test "x$enableval" = "xgtk3" ; then
+			enable_gtk3="yes"
+		else
+			enable_gtk3="no"
+		fi
+		])
+
+AS_IF([test "x$enable_gtk3" = "xyes"], [
+	gtk_version="gtk3"
+	PKG_CHECK_MODULES(GTK, [gtk+-3.0	>= 3.0])
+	], [
+	gtk_version="gtk2"
+	PKG_CHECK_MODULES(GTK, [gtk+-2.0	>= 2.20])
+	])
+
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 
@@ -191,6 +205,7 @@ echo $PACKAGE v$VERSION
 echo
 
 echo Prefix............... : $prefix
+echo GTK version ......... : $gtk_version
 echo libkeybinder ........ : yes
 echo python-keybinder .... : $have_python
 echo lua-keybinder ....... : $have_lua

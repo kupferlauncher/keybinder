@@ -1,10 +1,13 @@
-GTK_CFLAGS = $(shell pkg-config --cflags gtk+-2.0)
-GTK_LDFLAGS = $(shell pkg-config --libs gtk+-2.0)
+GTKPKG = gtk+-2.0
+GTK_CFLAGS = $(shell pkg-config --cflags $(GTKPKG))
+GTK_LDFLAGS = $(shell pkg-config --libs $(GTKPKG))
 
 LUA_CFLAGS = $(shell pkg-config --cflags lua5.1)
 LUA_LDFLAGS = $(shell pkg-config --libs lua5.1)
 
 KEYB_LDFLAGS = $(shell pkg-config --libs keybinder)
+
+CFLAGS ?= -g -O2
 
 VALAC = valac
 
@@ -15,7 +18,7 @@ lua: minigtk.so
 # Example C program with libkeybinder
 main: main.c
 	$(CC) $(GTK_CFLAGS) $(GTK_LDFLAGS) \
-		$(KEYB_LDFLAGS) $< -o $@
+		$(KEYB_LDFLAGS) $(CFLAGS) $< -o $@
 
 # Lua "minigtk" library
 minigtk.so: lminigtk.c
@@ -25,7 +28,7 @@ minigtk.so: lminigtk.c
 vala: vexample
 
 vexample: vexample.vala keybinder.vapi
-	$(VALAC) --pkg gtk+-2.0 --pkg keybinder --vapidir=. $<
+	$(VALAC) --pkg $(GTKPKG) --pkg keybinder --vapidir=. $<
 
 clean:
 	rm -f *.so *.lo main vexample

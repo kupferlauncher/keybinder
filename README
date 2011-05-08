@@ -18,6 +18,10 @@ The library contains:
 Compile and Installation Notes
 ------------------------------
 
+The option ``--enable-gtk=gtk3`` can be used to compile libkeybinder
+against GTK+ 3.0.  The default is ``--enable-gtk=gtk2``. The python
+bindings do not work with GTK 3.
+
 If you don't have the neccessary dependencies, and don't want to build 
 the python bindings, you have to explicitly disable them using the
 ``--disable-python`` option with configure.
