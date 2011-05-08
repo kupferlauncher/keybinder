@@ -1,4 +1,4 @@
-AC_INIT(keybinder, 0.2.2,
+AC_INIT(keybinder-3.0, 0.2.2,
     [])
 AC_CONFIG_SRCDIR(libkeybinder/bind.c)
 AC_CONFIG_MACRO_DIR([m4])
@@ -12,7 +12,7 @@ AM_INIT_AUTOMAKE([-Wno-portability])
 # If library changed but is backwards-compatible: increment age
 # If library changed backwards-incompatibly: reset age
 m4_define([keybinder_lt_current],  [0])
-m4_define([keybinder_lt_revision], [1])
+m4_define([keybinder_lt_revision], [0])
 m4_define([keybinder_lt_age],      [0])
 LT_CURRENT=keybinder_lt_current
 LT_REVISION=keybinder_lt_revision
@@ -60,8 +60,8 @@ AC_SUBST(LIBDIR)
 dnl ****************************************************************************
 dnl * GTK
 dnl ****************************************************************************
-gtk_version="gtk+-2.0"
-PKG_CHECK_MODULES(GTK, [gtk+-2.0	>= 2.20])
+gtk_version="gtk+-3.0"
+PKG_CHECK_MODULES(GTK, [gtk+-3.0	>= 3.0])
 
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)

@@ -1,5 +1,5 @@
-GTKPKG = gtk+-2.0
-KEYBPKG = keybinder
+GTKPKG = gtk+-3.0
+KEYBPKG = keybinder-3.0
 GTK_CFLAGS = $(shell pkg-config --cflags $(GTKPKG))
 GTK_LDFLAGS = $(shell pkg-config --libs $(GTKPKG))
 
