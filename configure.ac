@@ -7,9 +7,10 @@ AC_PREREQ(2.62)
 AM_INIT_AUTOMAKE([-Wno-portability])
 
 # Libtool version
-# When library changes: increment current, reset revision
+# For any change: increment revision
+# If interfaces are added/changed/removed: increment current, reset revision
 # If library changed but is backwards-compatible: increment age
-# Only internal changes: increment revision
+# If library changed backwards-incompatibly: reset age
 m4_define([keybinder_lt_current],  [0])
 m4_define([keybinder_lt_revision], [1])
 m4_define([keybinder_lt_age],      [0])
@@ -45,7 +46,10 @@ dnl ****************************************************************************
 dnl * Write the values of various paths in defs.py
 dnl ****************************************************************************
 AC_SUBST(VERSION)
+PACKAGE=$PACKAGE_NAME
+PACKAGE_TARNAME=$PACKAGE_NAME
 AC_SUBST(PACKAGE)
+AC_SUBST(PACKAGE_TARNAME)
 
 AS_AC_EXPAND(DATADIR, $datarootdir)
 AC_SUBST(DATADIR)
@@ -56,22 +60,8 @@ AC_SUBST(LIBDIR)
 dnl ****************************************************************************
 dnl * GTK
 dnl ****************************************************************************
-AC_ARG_ENABLE(gtk,
-	      [  --enable-gtk[=GTKVER] Supports gtk2 (default) or gtk3],
-	      [ if test "x$enableval" = "xgtk3" ; then
-			enable_gtk3="yes"
-		else
-			enable_gtk3="no"
-		fi
-		])
-
-AS_IF([test "x$enable_gtk3" = "xyes"], [
-	gtk_version="gtk+-3.0"
-	PKG_CHECK_MODULES(GTK, [gtk+-3.0	>= 3.0])
-	], [
-	gtk_version="gtk+-2.0"
-	PKG_CHECK_MODULES(GTK, [gtk+-2.0	>= 2.20])
-	])
+gtk_version="gtk+-2.0"
+PKG_CHECK_MODULES(GTK, [gtk+-2.0	>= 2.20])
 
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
@@ -206,7 +196,7 @@ dnl ****************************************************************************
 AC_OUTPUT([
 Makefile
 libkeybinder/Makefile
-libkeybinder/keybinder.pc
+libkeybinder/$PACKAGE_NAME.pc
 lua-keybinder/Makefile
 python-keybinder/__init__.py
 python-keybinder/Makefile

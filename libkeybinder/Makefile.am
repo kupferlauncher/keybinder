@@ -13,12 +13,12 @@ libkeybinder_la_LDFLAGS = $(GTK_LIBS)  -version-info $(LIBKEYBINDER_VERSION)
 include_HEADERS = keybinder.h
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = keybinder.pc
+pkgconfig_DATA = $(PACKAGE).pc
 
 CLEANFILES = 
 
 
-# gobject-introspection for libkeybinder
+# gobject-introspection for keybinder
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)
