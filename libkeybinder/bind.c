@@ -497,6 +497,37 @@ keybinder_unbind (const char *keystring, KeybinderHandler handler)
 	}
 }
 
+/**
+ * keybinder_unbind_all
+ *
+ * @keystring: Accelerator description (gtk_accelerator_parse format)
+ *
+ * unbind all callbacks for the given keystring
+ */
+void keybinder_unbind_all (const char *keystring)
+{
+	GSList *iter = bindings;
+
+	for (iter = bindings; iter != NULL; iter = iter->next) {
+		struct Binding *binding = iter->data;
+
+		if (strcmp (keystring, binding->keystring) != 0)
+			continue;
+
+		do_ungrab_key (binding);
+
+		bindings = g_slist_remove (bindings, binding);
+
+		g_free (binding->keystring);
+		g_free (binding);
+
+		/* re-start scan from head of new list */
+		iter = bindings;
+		if (!iter)
+			break;
+	}
+}
+
 guint32
 keybinder_get_current_event_time (void)
 {

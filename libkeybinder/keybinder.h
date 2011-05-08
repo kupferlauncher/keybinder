@@ -39,6 +39,8 @@ gboolean keybinder_bind (const char *keystring,
 void keybinder_unbind (const char *keystring,
                        KeybinderHandler  handler);
 
+void keybinder_unbind_all (const char *keystring);
+
 guint32 keybinder_get_current_event_time (void);
 
 G_END_DECLS
