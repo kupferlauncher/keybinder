@@ -209,6 +209,7 @@ echo
 echo Prefix............... : $prefix
 echo GTK version ......... : $gtk_version
 echo libkeybinder ........ : yes
+echo gobject-introspection : $found_introspection
 echo python-keybinder .... : $have_python
 echo lua-keybinder ....... : $have_lua
 echo 
