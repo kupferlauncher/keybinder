@@ -5,7 +5,7 @@ GTK_LDFLAGS = $(shell pkg-config --libs $(GTKPKG))
 LUA_CFLAGS = $(shell pkg-config --cflags lua5.1)
 LUA_LDFLAGS = $(shell pkg-config --libs lua5.1)
 
-KEYB_LDFLAGS = $(shell pkg-config --libs keybinder)
+KEYB_FLAGS = $(shell pkg-config --cflags --libs keybinder)
 
 CFLAGS ?= -g -O2
 
@@ -17,8 +17,7 @@ lua: minigtk.so
 
 # Example C program with libkeybinder
 main: main.c
-	$(CC) $(GTK_CFLAGS) $(GTK_LDFLAGS) \
-		$(KEYB_LDFLAGS) $(CFLAGS) $< -o $@
+	$(CC) $(KEYB_FLAGS) $(CFLAGS) $< -o $@
 
 # Lua "minigtk" library
 minigtk.so: lminigtk.c
