@@ -450,6 +450,15 @@ keybinder_init ()
 			  NULL);
 }
 
+/**
+ * keybinder_bind
+ *
+ * @keystring:  Accelerator description (gtk_accelerator_parse format)
+ * @handler:   (scope async):          callback
+ * @user_data: (closure) (allow-none):  user data parameter for callback
+ *
+ * Returns: success
+ */
 gboolean
 keybinder_bind (const char *keystring,
                 KeybinderHandler handler,
@@ -475,6 +484,17 @@ keybinder_bind (const char *keystring,
 	return success;
 }
 
+/**
+ * keybinder_unbind: (skip)
+ *
+ * @keystring:  Accelerator description (gtk_accelerator_parse format)
+ * @handler: (scope async):  callback
+ *
+ * unbind a specific callback
+ *
+ * skipped in introspection output: impossible to get right from automatic
+ * bindings
+ */
 void
 keybinder_unbind (const char *keystring, KeybinderHandler handler)
 {
