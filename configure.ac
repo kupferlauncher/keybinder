@@ -190,6 +190,12 @@ else
 fi
 AM_CONDITIONAL(HAVE_LUA, test "x$have_lua" = "xyes")
 
+dnl ***
+dnl * GTK DOC
+dnl ***
+
+GTK_DOC_CHECK([1.14], [--flavour no-tmpl])
+
 dnl ****************************************************************************
 dnl * --------------------------------------------------------------------------
 dnl ****************************************************************************
@@ -200,6 +206,7 @@ libkeybinder/$PACKAGE_NAME.pc
 lua-keybinder/Makefile
 python-keybinder/__init__.py
 python-keybinder/Makefile
+docs/Makefile
 ])
 
 echo

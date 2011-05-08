@@ -1,4 +1,4 @@
-SUBDIRS = libkeybinder
+SUBDIRS = libkeybinder docs
 
 if HAVE_PYTHON
 SUBDIRS += python-keybinder
@@ -28,4 +28,4 @@ DISTCLEANFILES = \
 
 ACLOCAL_AMFLAGS = -I m4
 
-DISTCHECK_CONFIGURE_FLAGS = --enable-introspection
+DISTCHECK_CONFIGURE_FLAGS = --enable-introspection --enable-gtk-doc
