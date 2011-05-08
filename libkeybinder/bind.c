@@ -502,6 +502,8 @@ keybinder_unbind (const char *keystring, KeybinderHandler handler)
  *
  * @keystring: Accelerator description (gtk_accelerator_parse format)
  *
+ * Rename to: keybinder_unbind
+ *
  * unbind all callbacks for the given keystring
  */
 void keybinder_unbind_all (const char *keystring)
