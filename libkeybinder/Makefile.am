@@ -15,3 +15,31 @@ include_HEADERS = keybinder.h
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = keybinder.pc
 
+CLEANFILES = 
+
+
+# gobject-introspection for libkeybinder
+-include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_GIRS =
+INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)
+INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
+
+if HAVE_INTROSPECTION
+introspection_sources = $(libkeybinder_la_SOURCES) $(include_HEADERS)
+
+Keybinder-1.0.gir: libkeybinder.la
+Keybinder_1_0_gir_INCLUDES = GObject-2.0
+Keybinder_1_0_gir_CFLAGS = $(INCLUDES)
+Keybinder_1_0_gir_LIBS = libkeybinder.la
+Keybinder_1_0_gir_FILES = $(introspection_sources)
+Keybinder_1_0_gir_SCANNERFLAGS = --warn-all
+INTROSPECTION_GIRS += Keybinder-1.0.gir
+
+girdir = $(datadir)/gir-1.0
+gir_DATA = $(INTROSPECTION_GIRS)
+
+typelibdir = $(libdir)/girepository-1.0
+typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+
+CLEANFILES += $(gir_DATA) $(typelib_DATA)
+endif

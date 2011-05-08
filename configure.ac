@@ -3,6 +3,9 @@ AC_INIT(keybinder, 0.2.2,
 AC_CONFIG_SRCDIR(libkeybinder/bind.c)
 AC_CONFIG_MACRO_DIR([m4])
 
+AC_PREREQ(2.62)
+AM_INIT_AUTOMAKE([-Wno-portability])
+
 # Libtool version
 # When library changes: increment current, reset revision
 # If library changed but is backwards-compatible: increment age
@@ -17,7 +20,6 @@ AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)
 
-AM_INIT_AUTOMAKE
 GNOME_COMMON_INIT
 
 AM_MAINTAINER_MODE
@@ -81,6 +83,8 @@ dnl **
 AS_AC_EXPAND(GTKPACKAGEDEP, $gtk_version)
 AC_SUBST(GTKPACKAGEDEP)
 
+dnl * gobject-introspection
+GOBJECT_INTROSPECTION_CHECK([0.6.7])
 
 dnl ***********************************
 dnl * Require XKB

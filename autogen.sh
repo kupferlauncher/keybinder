@@ -5,9 +5,9 @@ srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
 touch ChangeLog
 
-PKG_NAME="deskbar-applet"
+PKG_NAME="keybinder"
 ACLOCAL_FLAGS="$ACLOCAL_FLAGS -I m4"
-REQUIRED_AUTOCONF_VERSION=2.60
+REQUIRED_AUTOCONF_VERSION=2.62
 REQUIRED_AUTOMAKE_VERSION=1.9.2
 REQUIRED_MACROS="python.m4"
 
