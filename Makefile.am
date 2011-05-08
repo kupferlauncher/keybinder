@@ -13,6 +13,7 @@ EXTRA_DIST = \
 	examples/README    \
 	examples/example.py \
 	examples/example.lua \
+	examples/example_gi.lua \
 	examples/lminigtk.c \
 	examples/keybinder.vapi \
 	examples/vexample.vala \

@@ -18,6 +18,11 @@ example.lua contains a minimal Lua program using keybinder. Run it using::
     make lua
     ./example.lua
 
+example_gi.lua contains a minimal Lua program using keybinder via
+gobject-introspection and `lgi <http://gitorious.org/lgi>`__. Run it using::
+
+    ./example_gi.lua
+
 vexample.vala contains a minimal Vala program using keybinder. Run it using::
 
     make vala
