@@ -9,7 +9,7 @@ PKG_NAME="keybinder"
 ACLOCAL_FLAGS="$ACLOCAL_FLAGS -I m4"
 REQUIRED_AUTOCONF_VERSION=2.62
 REQUIRED_AUTOMAKE_VERSION=1.9.2
-REQUIRED_MACROS="python.m4"
+REQUIRED_MACROS=
 
 (test -f $srcdir/configure.ac \
   && test -f $srcdir/autogen.sh) || {

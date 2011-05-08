@@ -1,9 +1,5 @@
 SUBDIRS = libkeybinder docs
 
-if HAVE_PYTHON
-SUBDIRS += python-keybinder
-endif
-
 if HAVE_LUA
 SUBDIRS += lua-keybinder
 endif

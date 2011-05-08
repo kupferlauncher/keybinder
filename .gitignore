@@ -20,12 +20,6 @@
 /lua-keybinder/Makefile.in
 /m4/*.m4
 /missing
-/py-compile
-/python-keybinder/_keybinder.c
-/python-keybinder/Makefile
-/python-keybinder/Makefile.in
-/python-keybinder/__init__.py
-/python-keybinder/__init__.pyc
 
 /*.tar.gz
 .deps/
