@@ -428,6 +428,12 @@ keymap_changed (GdkKeymap *map)
 	}
 }
 
+/**
+ * keybinder_init
+ *
+ * Must be called after initializing GTK, before calling
+ * any other function in the library. Can only be called once.
+ */
 void
 keybinder_init ()
 {
@@ -550,6 +556,11 @@ void keybinder_unbind_all (const char *keystring)
 	}
 }
 
+/**
+ * keybinder_get_current_event_time
+ *
+ * Returns: the current event timestamp
+ */
 guint32
 keybinder_get_current_event_time (void)
 {
