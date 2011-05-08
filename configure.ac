@@ -64,15 +64,23 @@ AC_ARG_ENABLE(gtk,
 		])
 
 AS_IF([test "x$enable_gtk3" = "xyes"], [
-	gtk_version="gtk3"
+	gtk_version="gtk+-3.0"
 	PKG_CHECK_MODULES(GTK, [gtk+-3.0	>= 3.0])
 	], [
-	gtk_version="gtk2"
+	gtk_version="gtk+-2.0"
 	PKG_CHECK_MODULES(GTK, [gtk+-2.0	>= 2.20])
 	])
 
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
+
+
+dnl **
+dnl * Required gtk package (for keybinder.pc)
+dnl **
+AS_AC_EXPAND(GTKPACKAGEDEP, $gtk_version)
+AC_SUBST(GTKPACKAGEDEP)
+
 
 dnl ***********************************
 dnl * Require XKB
