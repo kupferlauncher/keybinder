@@ -36,6 +36,12 @@ gboolean keybinder_bind (const char *keystring,
                          KeybinderHandler  handler,
                          void *user_data);
 
+gboolean
+keybinder_bind_full (const char *keystring,
+                     KeybinderHandler handler,
+                     void *user_data,
+                     GDestroyNotify notify);
+
 void keybinder_unbind (const char *keystring,
                        KeybinderHandler  handler);
 

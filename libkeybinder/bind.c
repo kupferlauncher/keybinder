@@ -63,6 +63,7 @@ struct Binding {
 	KeybinderHandler      handler;
 	void                 *user_data;
 	char                 *keystring;
+	GDestroyNotify        notify;
 	/* GDK "distilled" values */
 	guint                 keyval;
 	GdkModifierType       modifiers;
@@ -462,11 +463,13 @@ keybinder_init ()
 }
 
 /**
- * keybinder_bind
+ * keybinder_bind: (skip)
  *
- * @keystring:  Accelerator description (gtk_accelerator_parse format)
- * @handler:   (scope async):          callback
- * @user_data: (closure) (allow-none):  user data parameter for callback
+ * @keystring: Accelerator description (gtk_accelerator_parse format)
+ * @handler:   callback
+ * @user_data: user data parameter for callback
+ *
+ * Shadowed by keybinder_bind_full in bindings
  *
  * Returns: success
  */
@@ -475,6 +478,27 @@ keybinder_bind (const char *keystring,
                 KeybinderHandler handler,
                 void *user_data)
 {
+	return keybinder_bind_full(keystring, handler, user_data, NULL);
+}
+
+/**
+ * keybinder_bind_full
+ *
+ * @keystring: Accelerator description (gtk_accelerator_parse format)
+ * @handler:   (scope notified):          callback
+ * @user_data: (closure) (allow-none):  user data parameter for callback
+ * @notify:    (allow-none):  called when the handler is removed
+ *
+ * Rename to: keybinder_bind
+ *
+ * Returns: success
+ */
+gboolean
+keybinder_bind_full (const char *keystring,
+                     KeybinderHandler handler,
+                     void *user_data,
+                     GDestroyNotify notify)
+{
 	struct Binding *binding;
 	gboolean success;
 
@@ -482,6 +506,7 @@ keybinder_bind (const char *keystring,
 	binding->keystring = g_strdup (keystring);
 	binding->handler = handler;
 	binding->user_data = user_data;
+	binding->notify = notify;
 
 	/* Sets the binding's keycode and modifiers */
 	success = do_grab_key (binding);
@@ -519,9 +544,12 @@ keybinder_unbind (const char *keystring, KeybinderHandler handler)
 			continue;
 
 		do_ungrab_key (binding);
-
 		bindings = g_slist_remove (bindings, binding);
 
+		TRACE (g_print("unbind, notify: %p\n", binding->notify));
+		if (binding->notify) {
+			binding->notify(binding->user_data);
+		}
 		g_free (binding->keystring);
 		g_free (binding);
 		break;
@@ -548,9 +576,12 @@ void keybinder_unbind_all (const char *keystring)
 			continue;
 
 		do_ungrab_key (binding);
-
 		bindings = g_slist_remove (bindings, binding);
 
+		TRACE (g_print("unbind_all, notify: %p\n", binding->notify));
+		if (binding->notify) {
+			binding->notify(binding->user_data);
+		}
 		g_free (binding->keystring);
 		g_free (binding);
 
