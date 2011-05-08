@@ -435,10 +435,12 @@ keymap_changed (GdkKeymap *map)
 }
 
 /**
- * keybinder_init
+ * keybinder_init:
  *
- * Must be called after initializing GTK, before calling
- * any other function in the library. Can only be called once.
+ * Initialize the keybinder library.
+ *
+ * This function must be called after initializing GTK, before calling any
+ * other function in the library. Can only be called once.
  */
 void
 keybinder_init ()
@@ -464,14 +466,17 @@ keybinder_init ()
 
 /**
  * keybinder_bind: (skip)
+ * @keystring: an accelerator description (gtk_accelerator_parse() format)
+ * @handler:   callback function
+ * @user_data: data to pass to @handler
  *
- * @keystring: Accelerator description (gtk_accelerator_parse format)
- * @handler:   callback
- * @user_data: user data parameter for callback
+ * Grab a key combination globally and register a callback to be called each
+ * time the key combination is pressed.
  *
- * Shadowed by keybinder_bind_full in bindings
+ * This function is excluded from introspected bindings and is replaced by
+ * keybinder_bind_full.
  *
- * Returns: success
+ * Returns: %TRUE if the accelerator could be grabbed
  */
 gboolean
 keybinder_bind (const char *keystring,
@@ -482,16 +487,20 @@ keybinder_bind (const char *keystring,
 }
 
 /**
- * keybinder_bind_full
+ * keybinder_bind_full:
+ * @keystring: an accelerator description (gtk_accelerator_parse() format)
+ * @handler:   (scope notified):        callback function
+ * @user_data: (closure) (allow-none):  data to pass to @handler
+ * @notify:    (allow-none):  called when @handler is unregistered
  *
- * @keystring: Accelerator description (gtk_accelerator_parse format)
- * @handler:   (scope notified):          callback
- * @user_data: (closure) (allow-none):  user data parameter for callback
- * @notify:    (allow-none):  called when the handler is removed
+ * Grab a key combination globally and register a callback to be called each
+ * time the key combination is pressed.
  *
  * Rename to: keybinder_bind
  *
- * Returns: success
+ * Since: 0.3.0
+ *
+ * Returns: %TRUE if the accelerator could be grabbed
  */
 gboolean
 keybinder_bind_full (const char *keystring,
@@ -522,14 +531,13 @@ keybinder_bind_full (const char *keystring,
 
 /**
  * keybinder_unbind: (skip)
+ * @keystring: an accelerator description (gtk_accelerator_parse() format)
+ * @handler:   callback function
  *
- * @keystring:  Accelerator description (gtk_accelerator_parse format)
- * @handler: (scope async):  callback
+ * Unregister a specific previously bound callback for this keystring.
  *
- * unbind a specific callback
- *
- * skipped in introspection output: impossible to get right from automatic
- * bindings
+ * This function is excluded from introspected bindings and is replaced by
+ * keybinder_unbind_all.
  */
 void
 keybinder_unbind (const char *keystring, KeybinderHandler handler)
@@ -557,13 +565,14 @@ keybinder_unbind (const char *keystring, KeybinderHandler handler)
 }
 
 /**
- * keybinder_unbind_all
+ * keybinder_unbind_all:
+ * @keystring: an accelerator description (gtk_accelerator_parse() format)
  *
- * @keystring: Accelerator description (gtk_accelerator_parse format)
+ * Unregister all previously bound callbacks for this keystring.
  *
  * Rename to: keybinder_unbind
  *
- * unbind all callbacks for the given keystring
+ * Since: 0.3.0
  */
 void keybinder_unbind_all (const char *keystring)
 {
@@ -593,7 +602,7 @@ void keybinder_unbind_all (const char *keystring)
 }
 
 /**
- * keybinder_get_current_event_time
+ * keybinder_get_current_event_time:
  *
  * Returns: the current event timestamp
  */
