@@ -12,10 +12,15 @@ libkeybinder_la_SOURCES = bind.c
 libkeybinder_la_LDFLAGS = $(GTK_LIBS)  -version-info $(LIBKEYBINDER_VERSION)
 include_HEADERS = keybinder.h
 
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = $(PACKAGE).pc
+pkgconffile = $(PACKAGE).pc
 
-CLEANFILES = 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = $(pkgconffile)
+
+EXTRA_DIST = $(pkgconffile).in
+DISTCLEANFILES = $(pkgconffile)
+
+CLEANFILES =
 
 
 # gobject-introspection for keybinder
