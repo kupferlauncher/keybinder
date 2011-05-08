@@ -8,8 +8,8 @@
 -- requires lgi  http://gitorious.org/lgi
 
 local lgi = require 'lgi'
-local Gtk = lgi.require('Gtk', '2.0')
-local Keybinder = lgi.require('Keybinder', '0.0')
+local Gtk = lgi.require('Gtk', '3.0')
+local Keybinder = lgi.require('Keybinder', '3.0')
 
 local function callback(keystring)
   print("In callback for", keystring)
