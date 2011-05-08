@@ -12,6 +12,7 @@
       The latest version of this documentation can be found on-line at
       <ulink role="online-location" url="http://[SERVER]/keybinder-3.0/index.html">http://[SERVER]/keybinder-3.0/</ulink>.
     -->
+    <xi:include parse="text" href="version.info" />
     </releaseinfo>
   </bookinfo>
 

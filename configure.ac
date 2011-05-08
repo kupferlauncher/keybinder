@@ -207,6 +207,7 @@ lua-keybinder/Makefile
 python-keybinder/__init__.py
 python-keybinder/Makefile
 docs/Makefile
+docs/version.info
 ])
 
 echo
