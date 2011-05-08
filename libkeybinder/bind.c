@@ -385,8 +385,13 @@ filter_func (GdkXEvent *gdk_xevent, GdkEvent *event, gpointer data)
 		processing_event = TRUE;
 		last_event_time = xevent->xkey.time;
 
-		for (iter = bindings; iter != NULL; iter = iter->next) {
+		iter = bindings;
+		while (iter != NULL) {
+			/* NOTE: ``iter`` might be removed from the list
+			 * in the callback.
+			 */
 			struct Binding *binding = iter->data;
+			iter = iter->next;
 
 			if (keyvalues_equal(binding->keyval, keyval) &&
 			    modifiers_equal(binding->modifiers, modifiers)) {
