@@ -1,4 +1,42 @@
 
+keybinder and keybinder-3.0  v0.3.0
+-----------------------------------
+
+Not Released Yet
+
+* Patch Makefile.am to use ACLOCAL_AMFLAGS=-I m4 (by Luca Falavigna)
+* Add two functions to fix gobject-introspection (gir) bindings:
+
+  ``keybinder_bind_full(keystring, callback, user_data, notify)``
+      Uses GDestroyNotify for notification of callback
+      unregistration. This function is compatible with introspected
+      bindings unlike ``keybinder_bind``.
+      Exported as ``keybinder_bind`` (``bind``) to bindings.
+
+  ``keybinder_unbind_all(keystring)``
+      unregister all callbacks for the specified keystring.
+      ``keybinder_unbind``'s signature cannot be supported by
+      introspection bindings, and unbinding all matches the common use
+      case (especially from bindings).
+      Exported as ``keybinder_unbind`` (``unbind``) to bindings.
+
+* Build a gobject-introspection ``.typelib`` file for libkeybinder
+* Add a reference manual for libkeybinder using gtk-doc
+* Branch the library into two simultaneously installable libraries
+
+  + ``keybinder`` is like the old version, using Gtk+ 2, package name
+    ``keybinder`` (pkgconfig) and ``Keybinder-0.0`` (gir)
+  + ``keybinder-3.0`` is a new version, using Gtk+ 3, package name
+    ``keybinder-3.0`` (pkgconfig) and ``Keybinder-3.0`` (gir)
+
+  + ``keybinder-3.0`` removes ``python-keybinder`` because pygtk will
+    never be compatible with Gtk+ 3. Instead gir bindings have to be
+    used.
+
+  + These libraries will possibly have separate releases in the future
+    but their first release is simultaneous, it is now.
+ 
+
 keybinder v0.2.2
 ----------------
 
