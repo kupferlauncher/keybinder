@@ -165,7 +165,7 @@ grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
 	}
 	gdk_flush();
 	if (gdk_error_trap_pop()) {
-		TRACE (g_warning ("Failed grab/ungrab"));
+		TRACE (g_print ("Failed grab/ungrab!\n"));
 		if (grab) {
 			/* On error, immediately release keys again */
 			grab_ungrab_with_ignorable_modifiers(rootwin,
