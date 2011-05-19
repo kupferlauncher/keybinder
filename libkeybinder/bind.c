@@ -72,7 +72,8 @@ struct Binding {
 static GSList *bindings = NULL;
 static guint32 last_event_time = 0;
 static gboolean processing_event = FALSE;
-static gboolean have_xkb_extension = FALSE;
+static gboolean detected_xkb_extension = FALSE;
+static gboolean use_xkb_extension = FALSE;
 
 /* Return the modifier mask that needs to be pressed to produce key in the
  * given group (keyboard layout) and level ("shift level").
@@ -198,7 +199,7 @@ grab_ungrab (GdkWindow *rootwin,
 	XkbDescPtr xmap = NULL;
 	gboolean success = FALSE;
 
-	if (have_xkb_extension) {
+	if (use_xkb_extension) {
 		xmap = XkbGetMap(GDK_WINDOW_XDISPLAY(rootwin),
 		                 XkbAllClientInfoMask,
 		                 XkbUseCoreKbd);
@@ -220,7 +221,7 @@ grab_ungrab (GdkWindow *rootwin,
 		}
 
 
-		if (have_xkb_extension) {
+		if (use_xkb_extension) {
 			add_modifiers = FinallyGetModifiersForKeycode(xmap,
 		                                              keys[k].keycode,
 		                                              keys[k].group,
@@ -368,7 +369,7 @@ filter_func (GdkXEvent *gdk_xevent, GdkEvent *event, gpointer data)
 				xevent->xkey.keycode, 
 				xevent->xkey.state));
 
-		if (have_xkb_extension) {
+		if (use_xkb_extension) {
 			gdk_keymap_translate_keyboard_state(
 				keymap,
 				xevent->xkey.keycode,
@@ -472,14 +473,14 @@ keybinder_init ()
 		return;
 	}
 
-	have_xkb_extension = XkbQueryExtension(disp,
-		                               &xkb_opcode,
-		                               &xkb_event_base,
-		                               &xkb_error_base,
-		                               &majver, &minver);
+	detected_xkb_extension = XkbQueryExtension(disp,
+	                                           &xkb_opcode,
+	                                           &xkb_event_base,
+	                                           &xkb_error_base,
+	                                           &majver, &minver);
 
-	have_xkb_extension = FALSE;
-	TRACE(g_print("XKB: %d, version: %d, %d\n", have_xkb_extension, majver, minver));
+	use_xkb_extension = detected_xkb_extension;
+	TRACE(g_print("XKB: %d, version: %d, %d\n", use_xkb_extension, majver, minver));
 
 	gdk_window_add_filter (rootwin, filter_func, NULL);
 
@@ -495,6 +496,32 @@ keybinder_init ()
 			  "keys_changed",
 			  G_CALLBACK (keymap_changed),
 			  NULL);
+}
+
+/**
+ * keybinder_set_use_cooked_accelerators:
+ * @use_cooked: if %FALSE disable cooked accelerators
+ *
+ * "Cooked" accelerators use symbols produced by using modifiers such
+ * as shift or altgr, for example if "!" is produced by "Shift+1".
+ *
+ * If cooked accelerators are enabled, use "&lt;Ctrl&gt;exclam" to bind
+ * "Ctrl+!" If disabled, use "&lt;Ctrl&gt;&lt;Shift&gt;1" to bind
+ * "Ctrl+Shift+1". These two examples are not equal on all keymaps.
+ *
+ * The cooked accelerator keyvalue and modifiers are provided by the
+ * function gdk_keymap_translate_keyboard_state()
+ *
+ * Cooked accelerators are useful if you receive keystrokes from GTK to bind,
+ * but raw accelerators can be useful if you or the user inputs accelerators as
+ * text.
+ *
+ * Default: Enabled. Should be set before binding anything.
+ */
+void
+keybinder_set_use_cooked_accelerators (gboolean use_cooked)
+{
+	use_xkb_extension = use_cooked && detected_xkb_extension;
 }
 
 /**
