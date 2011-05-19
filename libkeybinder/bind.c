@@ -221,18 +221,23 @@ grab_ungrab (GdkWindow *rootwin,
 		}
 
 
+		TRACE (g_print("grab/ungrab keycode: %d, lev: %d, grp: %d, ",
+			keys[k].keycode, keys[k].level, keys[k].group));
 		if (use_xkb_extension) {
 			add_modifiers = FinallyGetModifiersForKeycode(xmap,
 		                                              keys[k].keycode,
 		                                              keys[k].group,
 		                                              keys[k].level);
+		} else if (keys[k].level > 0) {
+			/* skip shifted/modified keys in non-xkb mode
+			 * this might mean the key can't be bound at all
+			 */
+			continue;
 		}
 
 		if (add_modifiers == MODIFIERS_ERROR) {
 			continue;
 		}
-		TRACE (g_print("grab/ungrab keycode: %d, lev: %d, grp: %d, ",
-			keys[k].keycode, keys[k].level, keys[k].group));
 		TRACE (g_print("modifiers: 0x%x (consumed: 0x%x)\n",
 		               add_modifiers | modifiers, add_modifiers));
 		if (grab_ungrab_with_ignorable_modifiers(rootwin,
