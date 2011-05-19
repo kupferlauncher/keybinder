@@ -599,10 +599,13 @@ keybinder_bind_full (const char *keystring,
  * @keystring: an accelerator description (gtk_accelerator_parse() format)
  * @handler:   callback function
  *
- * Unregister a specific previously bound callback for this keystring.
+ * Unregister a previously bound callback for this keystring.
+ *
+ * NOTE: multiple callbacks per keystring are not properly supported. You
+ * might as well use keybinder_unbind_all().
  *
  * This function is excluded from introspected bindings and is replaced by
- * keybinder_unbind_all.
+ * keybinder_unbind_all().
  */
 void
 keybinder_unbind (const char *keystring, KeybinderHandler handler)
