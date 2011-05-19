@@ -72,6 +72,7 @@ struct Binding {
 static GSList *bindings = NULL;
 static guint32 last_event_time = 0;
 static gboolean processing_event = FALSE;
+static gboolean have_xkb_extension = FALSE;
 
 /* Return the modifier mask that needs to be pressed to produce key in the
  * given group (keyboard layout) and level ("shift level").
@@ -193,13 +194,15 @@ grab_ungrab (GdkWindow *rootwin,
 	GdkKeymap *map;
 	GdkKeymapKey *keys;
 	gint n_keys;
-	GdkModifierType add_modifiers;
-	XkbDescPtr xmap;
+	GdkModifierType add_modifiers = 0;
+	XkbDescPtr xmap = NULL;
 	gboolean success = FALSE;
 
-	xmap = XkbGetMap(GDK_WINDOW_XDISPLAY(rootwin),
-	                 XkbAllClientInfoMask,
-	                 XkbUseCoreKbd);
+	if (have_xkb_extension) {
+		xmap = XkbGetMap(GDK_WINDOW_XDISPLAY(rootwin),
+		                 XkbAllClientInfoMask,
+		                 XkbUseCoreKbd);
+	}
 
 	map = gdk_keymap_get_default();
 	gdk_keymap_get_entries_for_keyval(map, keyval, &keys, &n_keys);
@@ -216,10 +219,13 @@ grab_ungrab (GdkWindow *rootwin,
 			continue;
 		}
 
-		add_modifiers = FinallyGetModifiersForKeycode(xmap,
+
+		if (have_xkb_extension) {
+			add_modifiers = FinallyGetModifiersForKeycode(xmap,
 		                                              keys[k].keycode,
 		                                              keys[k].group,
 		                                              keys[k].level);
+		}
 
 		if (add_modifiers == MODIFIERS_ERROR) {
 			continue;
@@ -243,7 +249,9 @@ grab_ungrab (GdkWindow *rootwin,
 
 	}
 	g_free(keys);
-	XkbFreeClientMap(xmap, 0, TRUE);
+	if (xmap) {
+		XkbFreeClientMap(xmap, 0, TRUE);
+	}
 
 	return success;
 }
@@ -360,7 +368,8 @@ filter_func (GdkXEvent *gdk_xevent, GdkEvent *event, gpointer data)
 				xevent->xkey.keycode, 
 				xevent->xkey.state));
 
-		gdk_keymap_translate_keyboard_state(
+		if (have_xkb_extension) {
+			gdk_keymap_translate_keyboard_state(
 				keymap,
 				xevent->xkey.keycode,
 				modifiers,
@@ -369,6 +378,10 @@ filter_func (GdkXEvent *gdk_xevent, GdkEvent *event, gpointer data)
 				 */
 				WE_ONLY_USE_ONE_GROUP,
 				&keyval, NULL, NULL, &consumed);
+		} else {
+			consumed = 0;
+			keyval = XLookupKeysym(&xevent->xkey, 0);
+		}
 
 		/* Map non-virtual to virtual modifiers */
 		modifiers &= ~consumed;
@@ -447,6 +460,26 @@ keybinder_init ()
 {
 	GdkKeymap *keymap = gdk_keymap_get_default ();
 	GdkWindow *rootwin = gdk_get_default_root_window ();
+	Display *disp;
+	int xkb_opcode;
+	int xkb_event_base;
+	int xkb_error_base;
+	int majver = XkbMajorVersion;
+	int minver = XkbMinorVersion;
+
+	if (!(disp = XOpenDisplay(NULL))) {
+		g_warning("keybinder_init: Unable to open display");
+		return;
+	}
+
+	have_xkb_extension = XkbQueryExtension(disp,
+		                               &xkb_opcode,
+		                               &xkb_event_base,
+		                               &xkb_error_base,
+		                               &majver, &minver);
+
+	have_xkb_extension = FALSE;
+	TRACE(g_print("XKB: %d, version: %d, %d\n", have_xkb_extension, majver, minver));
 
 	gdk_window_add_filter (rootwin, filter_func, NULL);
 
