@@ -81,8 +81,8 @@ static gboolean use_xkb_extension = FALSE;
 static GdkModifierType
 FinallyGetModifiersForKeycode (XkbDescPtr xkb,
                                KeyCode    key,
-                               uint     group,
-                               uint     level)
+                               guint      group,
+                               guint      level)
 {
 	int nKeyGroups;
 	int effectiveGroup;
@@ -132,8 +132,8 @@ FinallyGetModifiersForKeycode (XkbDescPtr xkb,
  */
 static gboolean
 grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
-                                      uint       keycode,
-                                      uint       modifiers,
+                                      guint      keycode,
+                                      guint      modifiers,
                                       gboolean   grab)
 {
 	guint i;
@@ -187,8 +187,8 @@ grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
  */
 static gboolean
 grab_ungrab (GdkWindow *rootwin,
-             uint       keyval,
-             uint       modifiers,
+             guint      keyval,
+             guint      modifiers,
              gboolean   grab)
 {
 	int k;
