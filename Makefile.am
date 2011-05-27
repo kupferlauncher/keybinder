@@ -10,6 +10,7 @@ EXTRA_DIST = \
 	examples/example.py \
 	examples/example.lua \
 	examples/example_gi.lua \
+	examples/lkeybinder.c \
 	examples/lminigtk.c \
 	examples/keybinder.vapi \
 	examples/vexample.vala \
