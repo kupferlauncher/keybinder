@@ -1,9 +1,5 @@
 SUBDIRS = libkeybinder docs
 
-if HAVE_LUA
-SUBDIRS += lua-keybinder
-endif
-
 EXTRA_DIST = \
 	examples/Makefile  \
 	examples/README    \

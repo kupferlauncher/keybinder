@@ -94,32 +94,6 @@ X_LDFLAGS="$X_LIBS"
 AC_SUBST(X_CFLAGS)
 AC_SUBST(X_LDFLAGS)
 
-AC_ARG_ENABLE(lua,
-             AS_HELP_STRING([--disable-lua],
-                            [disable lua bindings [default=if found]]),
-			    [enable_lua=no],
-                            [enable_lua=yes])
-
-dnl ****************************************************************************
-dnl  Check for Lua 5.1
-dnl ****************************************************************************
-
-if test "x$enable_lua" != "xno"; then
-  AX_LUA_HEADERS
-  if test "x$ac_cv_header_lua_h" = "xyes" ; then
-    AX_LUA_LIB_VERSION([501], [502])
-    LUA_VERSION=[5.1]
-    AC_SUBST(LUA_VERSION)
-    AC_SUBST(LUA_INCLUDE)
-    have_lua="yes"
-  else
-    have_lua="no"
-  fi
-else
-  have_lua="no"
-fi
-AM_CONDITIONAL(HAVE_LUA, test "x$have_lua" = "xyes")
-
 dnl ***
 dnl * GTK DOC
 dnl ***
@@ -133,7 +107,6 @@ AC_OUTPUT([
 Makefile
 libkeybinder/Makefile
 libkeybinder/$PACKAGE_NAME.pc
-lua-keybinder/Makefile
 docs/Makefile
 docs/version.info
 ])
@@ -147,7 +120,6 @@ echo GTK version ......... : $gtk_version
 echo libkeybinder ........ : yes
 echo gobject-introspection : $found_introspection
 echo gtk-doc ............. : $enable_gtk_doc
-echo lua-keybinder ....... : $have_lua
 echo 
 
 echo "Now type make to compile"
