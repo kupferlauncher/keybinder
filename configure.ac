@@ -1,4 +1,4 @@
-AC_INIT(keybinder, 0.2.2,
+AC_INIT(keybinder, 0.3.0,
     [])
 AC_CONFIG_SRCDIR(libkeybinder/bind.c)
 AC_CONFIG_MACRO_DIR([m4])
@@ -11,9 +11,9 @@ AM_INIT_AUTOMAKE([-Wno-portability])
 # If interfaces are added/changed/removed: increment current, reset revision
 # If library changed but is backwards-compatible: increment age
 # If library changed backwards-incompatibly: reset age
-m4_define([keybinder_lt_current],  [0])
-m4_define([keybinder_lt_revision], [1])
-m4_define([keybinder_lt_age],      [0])
+m4_define([keybinder_lt_current],  [1])
+m4_define([keybinder_lt_revision], [0])
+m4_define([keybinder_lt_age],      [1])
 LT_CURRENT=keybinder_lt_current
 LT_REVISION=keybinder_lt_revision
 LT_AGE=keybinder_lt_age
