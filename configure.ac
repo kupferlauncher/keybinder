@@ -1,4 +1,4 @@
-AC_INIT(keybinder-3.0, 0.2.2,
+AC_INIT(keybinder-3.0, 0.3.0,
     [])
 AC_CONFIG_SRCDIR(libkeybinder/bind.c)
 AC_CONFIG_MACRO_DIR([m4])
