@@ -2,7 +2,7 @@
 keybinder and keybinder-3.0  v0.3.0
 -----------------------------------
 
-Not Released Yet
+Released Sunday, 17 June 2012
 
 * Patch Makefile.am to use ACLOCAL_AMFLAGS=-I m4 (by Luca Falavigna)
 * Add two functions to fix gobject-introspection (gir) bindings:
@@ -35,6 +35,10 @@ Not Released Yet
 
   + These libraries will possibly have separate releases in the future
     but their first release is simultaneous, it is now.
+
+  + ``keybinder-3.0`` is distributed under X11 license, since the GPL
+    parts have been removed (python-keybinder and ax_lua).
+    The old branch ``keybinder`` is still GPL!
  
 
 keybinder v0.2.2
