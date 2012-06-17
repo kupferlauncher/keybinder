@@ -60,10 +60,6 @@ having a separate release. This package has taken the python bindings
 from the `Deskbar Applet`_ project, and broken it out to a standalone
 project. The library was subsequently rewritten in major parts.
 
-The module is licenced under the GNU General Public License v2 (or at
-your option, any later version), see the included file COPYING for
-details.
-
 .. _Tomboy:            http://projects.gnome.org/tomboy/
 .. _`Deskbar Applet`:  http://projects.gnome.org/deskbar-applet/
 
