@@ -1,4 +1,4 @@
-INCLUDES = $(PYTHON_INCLUDES) $(PYGTK_CFLAGS) -I../libkeybinder
+INCLUDES = $(PYTHON_INCLUDES) $(PYGTK_CFLAGS) -I$(top_srcdir)/libkeybinder
 
 AM_CFLAGS = -Wall
 
