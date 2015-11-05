@@ -1,4 +1,4 @@
-INCLUDES = $(GTK_CFLAGS)
+AM_CPPFLAGS = $(GTK_CFLAGS)
 
 AM_CFLAGS = -Wall -Wextra -ansi
 
