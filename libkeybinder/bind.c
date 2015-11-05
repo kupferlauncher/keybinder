@@ -256,7 +256,7 @@ grab_ungrab (GdkWindow *rootwin,
 	}
 	g_free(keys);
 	if (xmap) {
-		XkbFreeClientMap(xmap, 0, TRUE);
+		XkbFreeKeyboard(xmap, 0, TRUE);
 	}
 
 	return success;
