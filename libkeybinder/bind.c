@@ -552,7 +552,7 @@ keybinder_bind (const char *keystring,
 }
 
 /**
- * keybinder_bind_full:
+ * keybinder_bind_full: (rename-to keybinder_bind)
  * @keystring: an accelerator description (gtk_accelerator_parse() format)
  * @handler:   (scope notified):        callback function
  * @user_data: (closure) (allow-none):  data to pass to @handler
@@ -560,8 +560,6 @@ keybinder_bind (const char *keystring,
  *
  * Grab a key combination globally and register a callback to be called each
  * time the key combination is pressed.
- *
- * Rename to: keybinder_bind
  *
  * Since: 0.3.0
  *
@@ -633,12 +631,10 @@ keybinder_unbind (const char *keystring, KeybinderHandler handler)
 }
 
 /**
- * keybinder_unbind_all:
+ * keybinder_unbind_all: (rename-to keybinder_unbind)
  * @keystring: an accelerator description (gtk_accelerator_parse() format)
  *
  * Unregister all previously bound callbacks for this keystring.
- *
- * Rename to: keybinder_unbind
  *
  * Since: 0.3.0
  */
