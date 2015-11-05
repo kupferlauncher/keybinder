@@ -1,4 +1,4 @@
-INCLUDES = $(LUA_INCLUDE) $(GTK_CFLAGS) -I../libkeybinder
+AM_CPPFLAGS = $(LUA_INCLUDE) $(GTK_CFLAGS) -I../libkeybinder
 
 AM_CFLAGS = -Wall
 
