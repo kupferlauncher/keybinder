@@ -2,7 +2,6 @@ libkeybinder
 ============
 
 :Author: Ulrik Sverdrup <ulrik.sverdrup@gmail.com>
-:Homepage: http://kaizer.se/wiki/keybinder/
 
 **keybinder** is a library for registering global keyboard shortcuts.
 Keybinder works with GTK-based applications using the X Window System.

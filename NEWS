@@ -1,4 +1,13 @@
 
+keybinder v0.3.1
+----------------
+
+* Use ``XkbFreeKeyboard`` to fix memory leak
+  (by Dmitry Eremin-Solenikov)
+* Fix deprecated directives in build system
+  (by Dmitry Eremin-Solenikov)
+
+
 keybinder and keybinder-3.0  v0.3.0
 -----------------------------------
 
