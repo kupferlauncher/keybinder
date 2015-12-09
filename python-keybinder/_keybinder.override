@@ -20,9 +20,9 @@ void handler_c_func (const char *keystring, gpointer user_data)
 {
 	PyGILState_STATE gstate;
 	Handler_and_Args *ha = (Handler_and_Args *) user_data;
-	
+
 	gstate = PyGILState_Ensure();
-	
+
 	PyObject *result = PyEval_CallObject(ha->handler, ha->args);
 	if (result == NULL) {
 		if (PyErr_Occurred()) {
@@ -31,7 +31,7 @@ void handler_c_func (const char *keystring, gpointer user_data)
 	} else {
 		Py_DECREF(result);
 	}
-	
+
 	PyGILState_Release(gstate);
 }
 
@@ -43,9 +43,9 @@ ignore-glob
 	keybinder_init
 	*_get_type
 %%
-override keybinder_bind kwargs 
+override keybinder_bind kwargs
 static PyObject*
-_wrap_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs) 
+_wrap_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs)
 {
 	guint len;
 	PyObject *first;
@@ -55,7 +55,7 @@ _wrap_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs)
 	GSList *iter;
 	Handler_and_Args *ha;
 	gboolean success;
-	
+
 	len = PyTuple_Size(args);
 	if (len < 2) {
 		PyErr_SetString(PyExc_TypeError, "bind requires at least 2 arguments");
@@ -93,7 +93,7 @@ _wrap_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs)
 	ha->keystring = g_strdup(keystring);
 	Py_XINCREF(handler);
 	Py_XINCREF(extra_args);
-	
+
 	success = keybinder_bind(keystring, &handler_c_func, ha);
 	if (success) {
 		HA_List = g_slist_prepend(HA_List, ha);
@@ -103,14 +103,14 @@ _wrap_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs)
 	}
 }
 %%
-override keybinder_unbind kwargs 
+override keybinder_unbind kwargs
 static PyObject*
-_wrap_keybinder_unbind (PyGObject *self, PyObject *args, PyObject *kwargs) 
+_wrap_keybinder_unbind (PyGObject *self, PyObject *args, PyObject *kwargs)
 {
 	guint len;
 	char *keystring = NULL;
 	GSList *iter;
-	
+
 	len = PyTuple_Size(args);
 	if (len != 1) {
 		PyErr_SetString(PyExc_TypeError, "unbind requires exactly 1 argument");
