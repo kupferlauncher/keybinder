@@ -98,6 +98,10 @@ _wrap_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs)
 		HA_List = g_slist_prepend(HA_List, ha);
 		Py_RETURN_TRUE;
 	} else {
+		Py_XDECREF(ha->handler);
+		Py_XDECREF(ha->args);
+		g_free(ha->keystring);
+		g_free(ha);
 		Py_RETURN_FALSE;
 	}
 }
