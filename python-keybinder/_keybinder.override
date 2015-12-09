@@ -92,7 +92,6 @@ _wrap_keybinder_bind (PyGObject *self, PyObject *args, PyObject *kwargs)
 	ha->args = extra_args;
 	ha->keystring = g_strdup(keystring);
 	Py_XINCREF(handler);
-	Py_XINCREF(extra_args);
 
 	success = keybinder_bind(keystring, &handler_c_func, ha);
 	if (success) {
