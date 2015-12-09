@@ -134,8 +134,7 @@ _wrap_keybinder_unbind (PyGObject *self, PyObject *args, PyObject *kwargs)
 			g_free(ha->keystring);
 			g_free(ha);
 
-			Py_INCREF(Py_None);
-			return Py_None;
+			Py_RETURN_NONE;
 		}
 	}
 
