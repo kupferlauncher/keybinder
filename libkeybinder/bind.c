@@ -72,6 +72,7 @@ struct Binding {
 static GSList *bindings = NULL;
 static guint32 last_event_time = 0;
 static gboolean processing_event = FALSE;
+static gboolean avoid_cooking_shift_accelerators = TRUE;
 
 /* Return the modifier mask that needs to be pressed to produce key in the
  * given group (keyboard layout) and level ("shift level").
@@ -345,7 +346,7 @@ filter_func (GdkXEvent *gdk_xevent, GdkEvent *event, gpointer data)
 	XEvent *xevent = (XEvent *) gdk_xevent;
 	GdkKeymap *keymap = gdk_keymap_get_default();
 	guint keyval;
-	GdkModifierType consumed, modifiers;
+	GdkModifierType consumed, modifiers, shiftMask = 0;
 	guint mod_mask = gtk_accelerator_get_default_mod_mask();
 	GSList *iter;
 
@@ -360,6 +361,15 @@ filter_func (GdkXEvent *gdk_xevent, GdkEvent *event, gpointer data)
 				xevent->xkey.keycode, 
 				xevent->xkey.state));
 
+		if( avoid_cooking_shift_accelerators )
+		{
+			//gdk_keymap_translate_keyboard_state will always report that
+			//GDK_SHIFT_MASK got consumed (because it converts lower case to uppercase).
+			//We need to remove shift modifier, and insert it after the translation.
+			shiftMask = modifiers & GDK_SHIFT_MASK;
+		}
+		modifiers &= ~GDK_SHIFT_MASK;
+
 		gdk_keymap_translate_keyboard_state(
 				keymap,
 				xevent->xkey.keycode,
@@ -372,6 +382,8 @@ filter_func (GdkXEvent *gdk_xevent, GdkEvent *event, gpointer data)
 
 		/* Map non-virtual to virtual modifiers */
 		modifiers &= ~consumed;
+		if( avoid_cooking_shift_accelerators )
+			modifiers |= shiftMask;
 		gdk_keymap_add_virtual_modifiers(keymap, &modifiers);
 		modifiers &= mod_mask;
 
@@ -462,6 +474,27 @@ keybinder_init ()
 			  "keys_changed",
 			  G_CALLBACK (keymap_changed),
 			  NULL);
+}
+
+/**
+ * keybinder_set_avoid_cooking_shift_accelerators:
+ * @avoid_cooking_shift: if %TRUE, the Shift modifier won't be cooked into accelerators
+ *
+ * "Cooked" accelerators use symbols produced by using modifiers such
+ * as shift or altgr, for example if "!" is produced by "Shift+1",
+ * thus binding Shift+1 may not work as expected.
+ * Enabling this workaround will make Shift+1 work, but it could cause
+ * issues on some keymaps where "!" is an actual key.
+ *
+ * The cooked accelerator keyvalue and modifiers are provided by the
+ * function gdk_keymap_translate_keyboard_state()
+ *
+ * Default: Enabled.
+ */
+void
+keybinder_set_avoid_cooking_shift_accelerators (gboolean avoid_cooking_shift)
+{
+	avoid_cooking_shift_accelerators = avoid_cooking_shift;
 }
 
 /**

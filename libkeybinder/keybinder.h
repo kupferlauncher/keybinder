@@ -32,6 +32,8 @@ typedef void (* KeybinderHandler) (const char *keystring, void *user_data);
 
 void keybinder_init (void);
 
+void keybinder_set_avoid_cooking_shift_accelerators (gboolean avoid_cooking_shift);
+
 gboolean keybinder_bind (const char *keystring,
                          KeybinderHandler  handler,
                          void *user_data);

@@ -139,3 +139,28 @@ _wrap_keybinder_unbind (PyGObject *self, PyObject *args, PyObject *kwargs)
 	PyErr_SetString(PyExc_KeyError, "bind: keystring is not bound");
 	return NULL;
 }
+%%
+override keybinder_set_avoid_cooking_shift_accelerators kwargs
+static PyObject*
+_wrap_keybinder_set_avoid_cooking_shift_accelerators (PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+	guint len;
+	len = PyTuple_Size(args);
+	if (len != 1) {
+		PyErr_SetString(PyExc_TypeError, "set_avoid_cooking_shift_accelerators requires exactly 1 argument");
+		return NULL;
+	}
+
+	PyObject *pyBoolean = PyTuple_GetItem( args, 0 );
+	int boolArg = PyObject_IsTrue( pyBoolean );
+
+	if( boolArg < 0 )
+	{
+		PyErr_SetString(PyExc_TypeError, "set_avoid_cooking_shift_accelerators must use a Boolean argument");
+		return NULL;
+	}
+
+	keybinder_set_avoid_cooking_shift_accelerators( (gboolean)boolArg );
+
+	return Py_None;
+}

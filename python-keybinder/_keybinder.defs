@@ -34,6 +34,23 @@
 	"Will raise KeyError if keystring is not bound.")
 )
 
+(define-function set_avoid_cooking_shift_accelerators
+  (c-name "keybinder_set_avoid_cooking_shift_accelerators")
+  (return-type "none")
+  (parameters
+    '("bool" "avoid_cooking_shift")
+  )
+  (docstring "set_avoid_cooking_shift_accelerators (avoid_cooking_shift)\n"
+    "'Cooked' accelerators use symbols produced by using modifiers such\n"
+    "as shift or altgr, for example if '!' is produced by 'Shift+1',\n"
+    "thus binding Shift+1 may not work as expected.\n"
+    "Enabling this workaround will make Shift+1 work, but it could cause\n"
+    "issues on some keymaps where '!' is an actual key.\n"
+    "Default: Enabled.\n"
+    "\n"
+    "Will raise KeyError if avoid_cooking_shift is not bool.")
+)
+
 (define-function get_current_event_time
   (c-name "keybinder_get_current_event_time")
   (return-type "guint32")
