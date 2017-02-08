@@ -1,19 +1,13 @@
 libkeybinder
 ============
 
-:Author: Ulrik Sverdrup <ulrik.sverdrup@gmail.com>
-
 **keybinder** is a library for registering global keyboard shortcuts.
 Keybinder works with GTK-based applications using the X Window System.
 
-The library contains:
+The library contains ``keybinder-3.0``
 
 * A C library, ``libkeybinder``
 * Gobject-Introspection (gir)  generated bindings
-* Lua bindings, ``lua-keybinder``
-* Python bindings, ``python-keybinder``
-* An ``examples`` directory with programs in C, Lua, Python and Vala.
-
 
 Compile and Installation Notes
 ------------------------------
@@ -22,21 +16,13 @@ The package ``keybinder`` compiles against GTK+ 2 while the package
 ``keybinder-3.0`` compiles against GTK+ 3. The two packages can be
 installed in parallel.
 
+NOTE: the old “``keybinder``” is in the branch ``keybinder-legacy`` on
+github. ``keybinder-3.0`` is the active development.
+
 Both packages support generating gobject-introspection (gir) bindings,
 even if these bindings are more relevant for the future, hence the GTK+
 3 package. For ``keybinder-3.0``, the gir bindings are strongly
   recommended over any other language bindings.
-
-``keybinder`` includes ``python-keybinder`` which are static python
-(PyGTK 2) bindings.  If you don't have the neccessary dependencies, and
-don't want to build the python bindings, you have to explicitly disable
-them using the ``--disable-python`` option with configure.
-
-``keybinder`` and ``keybinder-3.0`` include experimental static lua
-bindings.  It is possible you need to tell configure where Lua includes
-are to be found using (adjusting the path appropriately)::
-
-    ./configure CPPFLAGS=-I/usr/include/lua5.1
 
 If you want to compile with reduced library linking, configure using::
 
@@ -45,11 +31,9 @@ If you want to compile with reduced library linking, configure using::
 Build Requirements
 ------------------
 
-    * GTK+ 3.0 (``keybinder-3.0``) or GTK+ 2.20 (``keybinder``)
+    * GTK+ 3.0 (``keybinder-3.0``)
     * gobject-introspection
     * gtk-doc 1.14
-    * Python 2.5, pygobject 2.15.3, pygobject-codegen-2.0 for
-      ``python-keybinder``
 
 History
 -------
