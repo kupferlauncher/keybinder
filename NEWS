@@ -1,6 +1,20 @@
 
+keybinder-3.0 v0.3.2
+--------------------
+
+* Fix ``keybinder_bind`` and others to not crash on non-X11 displays.
+  It simply returns FALSE, failing to bind the key.
+* Add new API:
+
+  ``gboolean keybinder_supported()``
+    Return TRUE if on key bindings are implemented for this
+    configuration. (Right now: only TRUE if gtk says there's an X11
+    display)
+
+* Fix deprecated directives in build system
+
 keybinder-3.0 v0.3.1
-----------------
+--------------------
 
 * Use ``XkbFreeKeyboard`` to fix memory leak
   (by Dmitry Eremin-Solenikov)
