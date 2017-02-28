@@ -199,6 +199,10 @@ grab_ungrab (GdkWindow *rootwin,
 	XkbDescPtr xmap = NULL;
 	gboolean success = FALSE;
 
+	if (!keybinder_supported()) {
+		return FALSE;
+	}
+
 	if (use_xkb_extension) {
 		xmap = XkbGetMap(GDK_WINDOW_XDISPLAY(rootwin),
 		                 XkbAllClientInfoMask,
@@ -473,6 +477,10 @@ keybinder_init ()
 	int majver = XkbMajorVersion;
 	int minver = XkbMinorVersion;
 
+	if (!keybinder_supported()) {
+		return;
+	}
+
 	if (!(disp = XOpenDisplay(NULL))) {
 		g_warning("keybinder_init: Unable to open display");
 		return;
@@ -677,4 +685,15 @@ keybinder_get_current_event_time (void)
 		return last_event_time;
 	else
 		return GDK_CURRENT_TIME;
+}
+
+/**
+ * keybinder_supported:
+ *
+ * Returns: TRUE if keybindings are supported
+ */
+gboolean
+keybinder_supported (void)
+{
+	return GDK_IS_X11_DISPLAY(gdk_display_get_default());
 }

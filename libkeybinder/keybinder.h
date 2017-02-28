@@ -51,6 +51,8 @@ void keybinder_unbind_all (const char *keystring);
 
 guint32 keybinder_get_current_event_time (void);
 
+gboolean keybinder_supported (void);
+
 G_END_DECLS
 
 #endif /* __KEY_BINDER_H__ */
