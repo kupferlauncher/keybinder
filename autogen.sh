@@ -5,7 +5,6 @@ srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
 touch ChangeLog
 
-PKG_NAME="keybinder"
 ACLOCAL_FLAGS="$ACLOCAL_FLAGS -I m4"
 REQUIRED_AUTOCONF_VERSION=2.62
 REQUIRED_AUTOMAKE_VERSION=1.9.2
@@ -40,4 +39,4 @@ if test -z "$gnome_autogen" ; then
   exit 1
 fi
 
-GNOME_DATADIR="$gnome_datadir" USE_GNOME2_MACROS=1 . $gnome_autogen
+GNOME_DATADIR="$gnome_datadir" . $gnome_autogen
