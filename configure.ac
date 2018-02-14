@@ -58,8 +58,8 @@ AC_SUBST(LIBDIR)
 dnl ****************************************************************************
 dnl * GTK
 dnl ****************************************************************************
-gtk_version="gtk+-3.0"
-PKG_CHECK_MODULES(GTK, [gtk+-3.0	>= 3.0])
+gtk_version="gtk+-x11-3.0"
+PKG_CHECK_MODULES(GTK, [gtk+-x11-3.0	>= 3.0])
 
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
